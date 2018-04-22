@@ -320,13 +320,15 @@ isRepresentationOf: aValue
 
 	self subclassResponsibility ! !
 
-!Entero class methodsFor: 'instance creation' stamp: 'HernanWilkinson 5/7/2016 22:53'!
+!Entero class methodsFor: 'instance creation' stamp: 'IT 4/22/2018 14:51:16'!
 with: aValue 
-	
+	| aSubclassThatRepresentValue |
 	"Esta verificacion esta puesta por si se equivocan y quieren crear un Entero pasando otra cosa que un Integer - Hernan"
 	aValue isInteger ifFalse: [  self error: 'aValue debe ser anInteger' ].
 	
-	^self new initalizeWith: aValue! !
+	aSubclassThatRepresentValue := Entero subclasses detect: [:aSubclass | aSubclass isRepresentationOf: aValue ].
+	
+	^aSubclassThatRepresentValue new initializeWith: aValue! !
 
 
 !classDefinition: #Cero category: #'Numero-Exercise'!
