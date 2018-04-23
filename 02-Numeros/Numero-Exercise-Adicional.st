@@ -223,6 +223,31 @@ isZero
 
 	self subclassResponsibility ! !
 
+
+!Numero methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:31:51'!
+addFraction: aFraccion 
+	self subclassResponsibility.! !
+
+!Numero methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:35:55'!
+addInteger: anEntero 
+	self subclassResponsibility.! !
+
+!Numero methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:40:44'!
+divideFraction: aFraccion 
+	self subclassResponsibility.! !
+
+!Numero methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:41:01'!
+divideInteger: anEntero 
+	self subclassResponsibility.! !
+
+!Numero methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:41:23'!
+multiplyFraction: aFraccion 
+	self subclassResponsibility.! !
+
+!Numero methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:41:14'!
+multiplyInteger: anEntero 
+	self subclassResponsibility.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Numero class' category: #'Numero-Exercise'!
@@ -241,73 +266,100 @@ invalidNumberTypeErrorDescription
 
 !classDefinition: #Entero category: #'Numero-Exercise'!
 Numero subclass: #Entero
-	instanceVariableNames: 'value'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Entero methodsFor: 'value' stamp: 'HernanWilkinson 5/7/2016 21:02'!
-integerValue
-
-	"Usamos integerValue en vez de value para que no haya problemas con el mensaje value implementado en Object - Hernan"
-	
-	^value! !
-
-
-!Entero methodsFor: 'testing' stamp: 'HernanWilkinson 5/7/2016 20:14'!
-isOne
-	
-	^value = 1! !
-
-!Entero methodsFor: 'testing' stamp: 'HernanWilkinson 5/7/2016 20:12'!
-isZero
-	
-	^value = 0! !
-
-
-!Entero methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 21:01'!
-= anObject
-
-	^(anObject isKindOf: self class) and: [ value = anObject integerValue ]! !
-
-!Entero methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:17'!
-hash
-
-	^value hash! !
-
-
-!Entero methodsFor: 'initialization' stamp: 'HernanWilkinson 5/7/2016 20:09'!
-initalizeWith: aValue 
-	
-	value := aValue! !
-
-
-!Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:13'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'SAS 4/19/2018 20:41:50'!
 * aMultiplier 
 	
-	^self class with: value * aMultiplier integerValue
-	! !
+	^aMultiplier multiplyInteger: self.! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:13'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'SAS 4/19/2018 20:28:20'!
 + anAdder 
 	
-	^self class with: value + anAdder integerValue
-! !
+	^anAdder addInteger: self.! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:14'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'SAS 4/19/2018 20:20:37'!
 / aDivisor 
-	
-	^Fraccion with: self over: aDivisor! !
+	^aDivisor divideInteger: self.! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'SAS 4/22/2018 22:47:16'!
 // aDivisor 
 	
-	^self class with: value // aDivisor integerValue! !
+	^self class with: self integerValue // aDivisor integerValue! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:00'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'SAS 4/22/2018 22:47:27'!
 greatestCommonDivisorWith: anEntero 
 	
-	^self class with: (value gcd: anEntero integerValue)! !
+	^self class with: (self integerValue gcd: anEntero integerValue)! !
+
+
+!Entero methodsFor: 'comparing' stamp: 'SAS 4/22/2018 22:50:26'!
+= anObject
+
+	^(anObject isKindOf: self class) and: [ self integerValue = anObject integerValue ]! !
+
+!Entero methodsFor: 'comparing' stamp: 'SAS 4/22/2018 22:47:39'!
+hash
+
+	^self integerValue hash! !
+
+
+!Entero methodsFor: 'initialization' stamp: 'SAS 4/22/2018 22:55:05'!
+initializeWith: aValue
+	self subclassResponsibility! !
+
+
+!Entero methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:35:20'!
+addFraction: aFraccion 
+	^aFraccion class with: (aFraccion numerator + (self * aFraccion denominator)) over: aFraccion denominator.! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 22:46:33'!
+addInteger: anEntero 
+	^self class with: (self integerValue + anEntero integerValue).! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:20:03'!
+divideFraction: aFraccion
+	^Fraccion with: aFraccion numerator over: (self * aFraccion denominator).! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:21:40'!
+divideInteger: anEntero
+	^Fraccion with: anEntero over: self.! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:45:45'!
+multiplyFraction: aFraccion 
+	^(self * aFraccion numerator) / (aFraccion denominator)
+	! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 22:46:54'!
+multiplyInteger: anEntero 
+	^self class with: self integerValue * anEntero integerValue.! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 23:10:09'!
+simplifiedDivide: aNumerator
+	self subclassResponsibility.! !
+
+!Entero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 23:10:10'!
+simplifiedDivisionBy: aDivisor
+	^ aDivisor simplifiedDivide: self.! !
+
+
+!Entero methodsFor: 'testing' stamp: 'SAS 4/22/2018 22:48:11'!
+isOne
+	
+	^self integerValue = 1! !
+
+!Entero methodsFor: 'testing' stamp: 'SAS 4/22/2018 22:48:04'!
+isZero
+	^self integerValue = 0! !
+
+
+!Entero methodsFor: 'value' stamp: 'SAS 4/22/2018 22:48:52'!
+integerValue
+
+	self subclassResponsibility.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -315,20 +367,19 @@ greatestCommonDivisorWith: anEntero
 Entero class
 	instanceVariableNames: ''!
 
-!Entero class methodsFor: 'instance creation' stamp: 'IT 4/22/2018 14:29:36'!
+!Entero class methodsFor: 'instance creation' stamp: 'SAS 4/22/2018 22:20:17'!
 isRepresentationOf: aValue
+	self subclassResponsibility.! !
 
-	self subclassResponsibility ! !
-
-!Entero class methodsFor: 'instance creation' stamp: 'IT 4/22/2018 14:51:16'!
+!Entero class methodsFor: 'instance creation' stamp: 'SAS 4/22/2018 22:54:34'!
 with: aValue 
-	| aSubclassThatRepresentValue |
+	| aSubclassThatRepresentsValue |
 	"Esta verificacion esta puesta por si se equivocan y quieren crear un Entero pasando otra cosa que un Integer - Hernan"
 	aValue isInteger ifFalse: [  self error: 'aValue debe ser anInteger' ].
 	
-	aSubclassThatRepresentValue := Entero subclasses detect: [:aSubclass | aSubclass isRepresentationOf: aValue ].
+	aSubclassThatRepresentsValue := Entero subclasses detect: [ :aSubclass | aSubclass isRepresentationOf: aValue ].
 	
-	^aSubclassThatRepresentValue new initializeWith: aValue! !
+	^aSubclassThatRepresentsValue new initializeWith: aValue.! !
 
 
 !classDefinition: #Cero category: #'Numero-Exercise'!
@@ -337,22 +388,32 @@ Entero subclass: #Cero
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
-!Cero commentStamp: '<historical>' prior: 0!
-Cero.canRepresent: 0
 
+!Cero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 23:02:02'!
+divideFraction: aFraccion
+	self error: self class canNotDivideByZeroErrorDescription.! !
 
+!Cero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 23:02:06'!
+divideInteger: anEntero
+	self error: self class canNotDivideByZeroErrorDescription.! !
 
+!Cero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 22:56:07'!
+initializeWith: aValue
+	"Esta verificacion esta puesta por si alguien se equivoca y quieren crear un Cero no-cero"
+	(self class isRepresentationOf: aValue) ifFalse: [  self error: 'aValue debe ser 0' ].
+	^self.! !
 
+!Cero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 22:51:37'!
+integerValue
+	^0! !
 
+!Cero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 23:10:09'!
+simplifiedDivide: aNumerator
+	self error: self class canNotDivideByZeroErrorDescription.! !
 
-
-
-!
-
-
-!Cero methodsFor: 'as yet unclassified' stamp: 'IT 4/22/2018 14:41:02'!
-divideTo: anEntero
-	^self error: 'una fraccion no puede ser cero'! !
+!Cero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 23:09:36'!
+simplifiedDivisionBy: aDivisor
+	^ self.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -360,39 +421,44 @@ divideTo: anEntero
 Cero class
 	instanceVariableNames: ''!
 
-!Cero class methodsFor: 'as yet unclassified' stamp: 'IT 4/22/2018 14:28:51'!
-isRepresentationOf: aValue
-	^ aValue = 0! !
+!Cero class methodsFor: 'instance creation' stamp: 'SAS 4/22/2018 22:24:17'!
+isRepresentationOf: aValue 
+	^aValue = 0.! !
 
 
-!classDefinition: #EnteroNi0Ni1 category: #'Numero-Exercise'!
-Entero subclass: #EnteroNi0Ni1
-	instanceVariableNames: ''
+!classDefinition: #EnteroNiUnoNiCero category: #'Numero-Exercise'!
+Entero subclass: #EnteroNiUnoNiCero
+	instanceVariableNames: 'value'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
-!EnteroNi0Ni1 commentStamp: '<historical>' prior: 0!
-Cero.canRepresent: 0
 
+!EnteroNiUnoNiCero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 22:58:02'!
+initializeWith: aValue
+	"Esta verificacion esta puesta por si alguien se equivoca y quieren crear un Uno o un Cero con esta clase"
+	(self class isRepresentationOf: aValue) ifFalse: [  self error: 'aValue debe no ser ni 1 ni 0' ].
+	value _ aValue.! !
 
+!EnteroNiUnoNiCero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 22:48:39'!
+integerValue
 
+	"Usamos integerValue en vez de value para que no haya problemas con el mensaje value implementado en Object - Hernan"
+	
+	^value! !
 
-
-
-
-
-!
-
+!EnteroNiUnoNiCero methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 23:14:43'!
+simplifiedDivide: aNumerator
+	^Fraccion new initializeWith: aNumerator over: self.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'EnteroNi0Ni1 class' category: #'Numero-Exercise'!
-EnteroNi0Ni1 class
+!classDefinition: 'EnteroNiUnoNiCero class' category: #'Numero-Exercise'!
+EnteroNiUnoNiCero class
 	instanceVariableNames: ''!
 
-!EnteroNi0Ni1 class methodsFor: 'as yet unclassified' stamp: 'IT 4/22/2018 14:32:06'!
-isRepresentationOf: aValue
-	^ aValue = 1! !
+!EnteroNiUnoNiCero class methodsFor: 'instance creation' stamp: 'SAS 4/22/2018 22:29:12'!
+isRepresentationOf: aValue 
+	^((Cero isRepresentationOf: aValue) or: (Uno isRepresentationOf: aValue)) not.! !
 
 
 !classDefinition: #Uno category: #'Numero-Exercise'!
@@ -401,22 +467,28 @@ Entero subclass: #Uno
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
-!Uno commentStamp: '<historical>' prior: 0!
-Cero.canRepresent: 0
 
+!Uno methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 22:52:22'!
+divideFraction: aFraccion
+	^aFraccion! !
 
+!Uno methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 22:52:42'!
+divideInteger: anEntero
+	^anEntero! !
 
+!Uno methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 22:56:44'!
+initializeWith: aValue
+	"Esta verificacion esta puesta por si alguien se equivoca y quieren crear un Uno no-uno"
+	(self class isRepresentationOf: aValue) ifFalse: [  self error: 'aValue debe ser 1' ].
+	^self.! !
 
+!Uno methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 22:51:45'!
+integerValue
+	^1! !
 
-
-
-
-!
-
-
-!Uno methodsFor: 'as yet unclassified' stamp: 'IT 4/22/2018 14:43:06'!
-divideTo: anEntero
-	^ anEntero! !
+!Uno methodsFor: 'polymorphism' stamp: 'SAS 4/22/2018 23:11:32'!
+simplifiedDivide: aNumerator
+	^aNumerator.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -424,9 +496,9 @@ divideTo: anEntero
 Uno class
 	instanceVariableNames: ''!
 
-!Uno class methodsFor: 'as yet unclassified' stamp: 'IT 4/22/2018 14:30:17'!
-isRepresentationOf: aValue
-	^ aValue = 1! !
+!Uno class methodsFor: 'instance creation' stamp: 'SAS 4/22/2018 22:27:46'!
+isRepresentationOf: aValue 
+	^aValue = 1.! !
 
 
 !classDefinition: #Fraccion category: #'Numero-Exercise'!
@@ -469,26 +541,20 @@ hash
 	^(numerator hash / denominator hash) hash! !
 
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:14'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'SAS 4/19/2018 20:43:10'!
 * aMultiplier 
 	
-	^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)
-	! !
+	^aMultiplier multiplyFraction: self.! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:14'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'SAS 4/19/2018 20:28:44'!
 + anAdder 
 	
-	| newNumerator newDenominator |
-	
-	newNumerator := (numerator * anAdder denominator) + (denominator * anAdder numerator).
-	newDenominator := denominator * anAdder denominator.
-	
-	^newNumerator / newDenominator ! !
+	^anAdder addFraction: self.! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:14'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'SAS 4/19/2018 20:22:46'!
 / aDivisor 
 	
-	^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)! !
+	^aDivisor divideFraction: self.! !
 
 
 !Fraccion methodsFor: 'accessing' stamp: 'HernanWilkinson 5/7/2016 21:56'!
@@ -501,25 +567,60 @@ numerator
 
 	^ numerator! !
 
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:37:19'!
+addFraction: aFraccion 
+
+	| newNumerator newDenominator |
+	
+	newNumerator := (numerator * aFraccion denominator) + (denominator * aFraccion numerator).
+	newDenominator := denominator * aFraccion denominator.
+	
+	^newNumerator / newDenominator! !
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:36:39'!
+addInteger: anEntero 
+	| newNumerator newDenominator |
+	
+	newNumerator := numerator + (denominator * anEntero).
+	newDenominator := denominator.
+	
+	^newNumerator / newDenominator! !
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:21:24'!
+divideFraction: aFraccion
+	^Fraccion with: (self denominator * aFraccion numerator) over: (self numerator * aFraccion denominator).! !
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:38:03'!
+divideInteger: anEntero
+	^Fraccion with: (self denominator * anEntero) over: self numerator.! !
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:44:28'!
+multiplyFraction: aFraccion 
+
+	^(numerator * aFraccion numerator) / (denominator * aFraccion denominator)
+	! !
+
+!Fraccion methodsFor: 'polymorphism' stamp: 'SAS 4/19/2018 20:44:58'!
+multiplyInteger: anEntero 
+	
+	^(numerator * anEntero) / denominator
+	! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Fraccion class' category: #'Numero-Exercise'!
 Fraccion class
 	instanceVariableNames: ''!
 
-!Fraccion class methodsFor: 'intance creation' stamp: 'HernanWilkinson 5/7/2016 20:41'!
+!Fraccion class methodsFor: 'instance creation' stamp: 'SAS 4/22/2018 23:12:53'!
 with: aDividend over: aDivisor
 
 	| greatestCommonDivisor numerator denominator |
 	
-	aDivisor isZero ifTrue: [ self error: self canNotDivideByZeroErrorDescription ].
-	aDividend isZero ifTrue: [ ^aDividend ].
-	
 	greatestCommonDivisor := aDividend greatestCommonDivisorWith: aDivisor. 
 	numerator := aDividend // greatestCommonDivisor.
 	denominator := aDivisor // greatestCommonDivisor.
-	
-	denominator isOne ifTrue: [ ^numerator ].
 
-	^self new initializeWith: numerator over: denominator
+	^numerator simplifiedDivisionBy: denominator.
 	! !
