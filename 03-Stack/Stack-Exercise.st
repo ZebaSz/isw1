@@ -144,32 +144,32 @@ Object subclass: #OOStack
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:18:45'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:53:27'!
 initialize
-	stack := EmptyStackNode new.! !
+	stack _ StackBase withBlockIfEmpty: [self error: self class stackEmptyErrorDescription].! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:24:52'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:43:02'!
 isEmpty
-	^stack isEmpty.! !
+	^stack hasValue.! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:31:44'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:44:26'!
 pop
 	|oldTop|
-	oldTop := stack top.
-	stack := stack pop.
+	oldTop := stack value.
+	stack := stack substack.
 	^oldTop! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:21:56'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:45:07'!
 push: anObject
-	stack := stack push: anObject.! !
+	stack := StackElement with: anObject onTopOf: stack.! !
 
 !OOStack methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:32:05'!
 size
 	^stack size.! !
 
-!OOStack methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:27:21'!
+!OOStack methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:44:14'!
 top
-	^stack top.! !
+	^stack value.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -177,94 +177,99 @@ top
 OOStack class
 	instanceVariableNames: ''!
 
-!OOStack class methodsFor: 'error descriptions' stamp: 'SAS 4/23/2018 20:20:17'!
-signalEmpty
-	self error: self stackEmptyErrorDescription.! !
-
 !OOStack class methodsFor: 'error descriptions' stamp: 'HernanWilkinson 5/7/2012 11:51'!
 stackEmptyErrorDescription
 	
 	^ 'Stack is empty'! !
 
 
-!classDefinition: #StackNode category: #'Stack-Exercise'!
-Object subclass: #StackNode
+!classDefinition: #StackLevel category: #'Stack-Exercise'!
+Object subclass: #StackLevel
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!StackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:25:04'!
-isEmpty
+!StackLevel methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:42:05'!
+hasValue
 	self subclassResponsibility.! !
 
-!StackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:23:41'!
-pop
-	self subclassResponsibility.! !
-
-!StackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:24:11'!
-push: anObject
-	^NonEmptyStackNode
-		with: anObject
-		onTopOf: self.! !
-
-!StackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:32:15'!
+!StackLevel methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:32:15'!
 size
 	self subclassResponsibility.! !
 
-!StackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:30:33'!
-top
+!StackLevel methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:43:20'!
+substack
+	self subclassResponsibility.! !
+
+!StackLevel methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:44:00'!
+value
 	self subclassResponsibility.! !
 
 
-!classDefinition: #EmptyStackNode category: #'Stack-Exercise'!
-StackNode subclass: #EmptyStackNode
-	instanceVariableNames: ''
+!classDefinition: #StackBase category: #'Stack-Exercise'!
+StackLevel subclass: #StackBase
+	instanceVariableNames: 'blockIfEmpty'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!EmptyStackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:25:27'!
-isEmpty
-	^true.! !
+!StackBase methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:42:05'!
+hasValue
+	^ true.! !
 
-!EmptyStackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:19:44'!
-pop
-	OOStack signalEmpty.! !
-
-!EmptyStackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:32:42'!
+!StackBase methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:32:42'!
 size
 	^0.! !
 
-!EmptyStackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:30:22'!
-top
-	OOStack signalEmpty.! !
+!StackBase methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:51:24'!
+substack
+	^blockIfEmpty value.! !
+
+!StackBase methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:51:33'!
+value
+	^blockIfEmpty value.! !
+
+!StackBase methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:50:53'!
+withBlockIfEmpty: aBlockClosure
+	blockIfEmpty := aBlockClosure.
+	^self.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'StackBase class' category: #'Stack-Exercise'!
+StackBase class
+	instanceVariableNames: ''!
+
+!StackBase class methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:50:09'!
+withBlockIfEmpty: aBlockClosure
+	^self new withBlockIfEmpty: aBlockClosure.! !
 
 
-!classDefinition: #NonEmptyStackNode category: #'Stack-Exercise'!
-StackNode subclass: #NonEmptyStackNode
+!classDefinition: #StackElement category: #'Stack-Exercise'!
+StackLevel subclass: #StackElement
 	instanceVariableNames: 'value substack'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!NonEmptyStackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:25:18'!
-isEmpty
-	^false.! !
+!StackElement methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:42:05'!
+hasValue
+	^ false.! !
 
-!NonEmptyStackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:15:32'!
-pop
-	^substack.! !
-
-!NonEmptyStackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:32:34'!
+!StackElement methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:32:34'!
 size
 	^substack size + 1.! !
 
-!NonEmptyStackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:29:23'!
-top
-	^value.! !
+!StackElement methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:43:20'!
+substack
+	^ substack.! !
 
-!NonEmptyStackNode methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:14:25'!
+!StackElement methodsFor: 'as yet unclassified' stamp: 'SAS 4/26/2018 09:44:00'!
+value
+	^ value.! !
+
+!StackElement methodsFor: 'as yet unclassified' stamp: 'SAS 4/23/2018 20:14:25'!
 with: anObject onTopOf: anOOStack 
 	value := anObject.
 	substack := anOOStack.
@@ -272,10 +277,10 @@ with: anObject onTopOf: anOOStack
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'NonEmptyStackNode class' category: #'Stack-Exercise'!
-NonEmptyStackNode class
+!classDefinition: 'StackElement class' category: #'Stack-Exercise'!
+StackElement class
 	instanceVariableNames: ''!
 
-!NonEmptyStackNode class methodsFor: 'instance creation' stamp: 'SAS 4/23/2018 20:26:49'!
+!StackElement class methodsFor: 'instance creation' stamp: 'SAS 4/23/2018 20:26:49'!
 with: anObject onTopOf: anOOStack 
 	^self new with: anObject onTopOf: anOOStack.! !
