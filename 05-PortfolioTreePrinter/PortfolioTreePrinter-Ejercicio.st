@@ -601,10 +601,6 @@ value
 	self subclassResponsibility ! !
 
 
-!AccountTransaction methodsFor: 'as yet unclassified' stamp: 'SAS 5/10/2018 19:33:37'!
-applyOn: aBalance
-	self subclassResponsibility.! !
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'AccountTransaction class' category: #'PortfolioTreePrinter-Ejercicio'!
@@ -628,10 +624,6 @@ AccountTransaction subclass: #CertificateOfDeposit
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
-
-!CertificateOfDeposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:25:19'!
-applyOn: aBalance
-	^aBalance - value.! !
 
 !CertificateOfDeposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:41:20'!
 call: aMethodObject
@@ -701,10 +693,6 @@ value
 
 	^ value! !
 
-
-!Deposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/10/2018 19:35:01'!
-applyOn: aBalance 
-	^aBalance + value.! !
 
 !Deposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:32:19'!
 call: aMethodObject
@@ -788,10 +776,6 @@ TransferTransaction subclass: #TransferDeposit
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:17:41'!
-applyOn: aBalance 
-	^aBalance + self value.! !
-
 !TransferDeposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:33:53'!
 call: aMethodObject
 	^aMethodObject transferDepositValue: self.! !
@@ -803,10 +787,6 @@ TransferTransaction subclass: #TransferWithdraw
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
-
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:16:44'!
-applyOn: aBalance
-	^aBalance - self value.! !
 
 !TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:33:30'!
 call: aMethodObject
@@ -837,11 +817,6 @@ value
 
 	^ value ! !
 
-
-!Withdraw methodsFor: 'as yet unclassified' stamp: 'SAS 5/10/2018 20:55:57'!
-applyOn: aBalance
-	^aBalance - value.
-	! !
 
 !Withdraw methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:33:00'!
 call: aMethodObject
