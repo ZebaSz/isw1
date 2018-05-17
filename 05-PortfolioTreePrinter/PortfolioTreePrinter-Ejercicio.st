@@ -539,7 +539,7 @@ Object subclass: #AccountTransaction
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !AccountTransaction methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:05:12'!
-call: aMethodObject
+do: aMethodObject
 	self subclassResponsibility.! !
 
 
@@ -586,8 +586,8 @@ value
 
 
 !CertificateOfDeposit methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:41:20'!
-call: aMethodObject
-	aMethodObject certificateOfDepositValue: self.! !
+do: aMethodObject
+	aMethodObject doWithCertificateOfDeposit: self.! !
 
 
 !CertificateOfDeposit methodsFor: 'initialization' stamp: 'SAS 5/10/2018 20:43:42'!
@@ -626,8 +626,8 @@ AccountTransaction subclass: #Deposit
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !Deposit methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:32:19'!
-call: aMethodObject
-	aMethodObject depositValue: self.! !
+do: aMethodObject
+	aMethodObject doWithDeposit: self.! !
 
 
 !Deposit methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:45'!
@@ -702,8 +702,8 @@ TransferTransaction subclass: #TransferDeposit
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !TransferDeposit methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:33:53'!
-call: aMethodObject
-	aMethodObject transferDepositValue: self.! !
+do: aMethodObject
+	aMethodObject doWithTransferDeposit: self.! !
 
 
 !classDefinition: #TransferWithdraw category: #'PortfolioTreePrinter-Ejercicio'!
@@ -714,8 +714,8 @@ TransferTransaction subclass: #TransferWithdraw
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !TransferWithdraw methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:33:30'!
-call: aMethodObject
-	aMethodObject transferWithdrawValue: self.! !
+do: aMethodObject
+	aMethodObject doWithTransferWithdraw: self.! !
 
 
 !classDefinition: #Withdraw category: #'PortfolioTreePrinter-Ejercicio'!
@@ -726,8 +726,8 @@ AccountTransaction subclass: #Withdraw
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !Withdraw methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:33:00'!
-call: aMethodObject
-	aMethodObject withdrawValue: self.! !
+do: aMethodObject
+	aMethodObject doWithWithdraw: self.! !
 
 
 !Withdraw methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:46'!
@@ -771,11 +771,11 @@ Object subclass: #PortfolioPrinterMethodObject
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !PortfolioPrinterMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:22:59'!
-portfolioValue: aPortfolio
+doWithPortfolio: aPortfolio
 	self subclassResponsibility.! !
 
 !PortfolioPrinterMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:23:16'!
-receptiveAccountValue: aReceptiveAccount
+doWithReceptiveAccount: aReceptiveAccount
 	self subclassResponsibility.! !
 
 
@@ -789,7 +789,7 @@ formatLineFor: aPortfolio
 !PortfolioPrinterMethodObject methodsFor: 'evaluating' stamp: 'SAS 5/16/2018 16:52:11'!
 value
 	lines := OrderedCollection new.
-	portfolio call: self.
+	portfolio do: self.
 	^lines! !
 
 
@@ -818,14 +818,14 @@ PortfolioPrinterMethodObject subclass: #PortfolioTreePrinter
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !PortfolioTreePrinter methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 16:41:57'!
-portfolioValue: aPortfolio 
+doWithPortfolio: aPortfolio 
 	lines add: (self formatLineFor: aPortfolio).
 	depth := depth + 1.
 	aPortfolio eachAccountDo: self.
 	depth := depth -  1.! !
 
 !PortfolioTreePrinter methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 16:48:09'!
-receptiveAccountValue: aReceptiveAccount 
+doWithReceptiveAccount: aReceptiveAccount 
 	lines add: (self formatLineFor: aReceptiveAccount).! !
 
 
@@ -837,14 +837,14 @@ PortfolioPrinterMethodObject subclass: #ReversePortfolioTreePrinter
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !ReversePortfolioTreePrinter methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 18:22:17'!
-portfolioValue: aPortfolio 
+doWithPortfolio: aPortfolio 
 	lines addFirst: (self formatLineFor: aPortfolio).
 	depth := depth + 1.
 	aPortfolio eachAccountDo: self.
 	depth := depth -  1.! !
 
 !ReversePortfolioTreePrinter methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 18:21:26'!
-receptiveAccountValue: aReceptiveAccount 
+doWithReceptiveAccount: aReceptiveAccount 
 	lines addFirst: (self formatLineFor: aReceptiveAccount).! !
 
 
@@ -872,7 +872,7 @@ balance
 	self subclassResponsibility ! !
 
 !SummarizingAccount methodsFor: 'transactions' stamp: 'SAS 5/16/2018 16:38:20'!
-call: aMethodObject
+do: aMethodObject
 	self subclassResponsibility.! !
 
 !SummarizingAccount methodsFor: 'transactions' stamp: 'HernanWilkinson 7/13/2011 18:35'!
@@ -889,12 +889,12 @@ SummarizingAccount subclass: #Portfolio
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !Portfolio methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 16:39:04'!
-call: aMethodObject
-	aMethodObject portfolioValue: self.! !
+do: aMethodObject
+	aMethodObject doWithPortfolio: self.! !
 
 !Portfolio methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 16:47:10'!
 eachAccountDo: aMethodObject
-	accounts do: [ :account | account call: aMethodObject ].! !
+	accounts do: [ :account | account do: aMethodObject ].! !
 
 
 !Portfolio methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 19:19'!
@@ -1006,12 +1006,12 @@ SummarizingAccount subclass: #ReceptiveAccount
 !ReceptiveAccount methodsFor: 'accessing' stamp: 'SAS 5/14/2018 18:53:55'!
 eachTransactionDo: aMethodObject
 	self transactions do: [ :transaction |
-		transaction call: aMethodObject ].! !
+		transaction do: aMethodObject ].! !
 
 
 !ReceptiveAccount methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 16:47:36'!
-call: aMethodObject
-	aMethodObject receptiveAccountValue: self.! !
+do: aMethodObject
+	aMethodObject doWithReceptiveAccount: self.! !
 
 
 !ReceptiveAccount methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:35'!
@@ -1063,11 +1063,11 @@ account
 
 
 !TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:14:39'!
-certificateOfDepositValue: aCertificateOfDeposit
+doWithCertificateOfDeposit: aCertificateOfDeposit
 	self subclassResponsibility.! !
 
 !TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:14:36'!
-depositValue: aDeposit
+doWithDeposit: aDeposit
 	self subclassResponsibility.! !
 
 !TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:13:40'!
@@ -1075,15 +1075,15 @@ initializeFor: aReceptiveAccount
 	account := aReceptiveAccount.! !
 
 !TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:14:14'!
-transferDepositValue: aTransferDeposit
+doWithTransferDeposit: aTransferDeposit
 	self subclassResponsibility.! !
 
 !TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:14:10'!
-transferWithdrawValue: aTransferWithdraw
+doWithTransferWithdraw: aTransferWithdraw
 	self subclassResponsibility.! !
 
 !TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:14:06'!
-withdrawValue: aWithdraw
+doWithWithdraw: aWithdraw
 	self subclassResponsibility.! !
 
 
@@ -1110,25 +1110,25 @@ TransactionMethodObject subclass: #AccountSummary
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !AccountSummary methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:40:11'!
-certificateOfDepositValue: aCertificateOfDeposit
+doWithCertificateOfDeposit: aCertificateOfDeposit
 	lines add: 'Plazo fijo por ', aCertificateOfDeposit value printString,
 		' durante ', aCertificateOfDeposit duration printString ,
 		' dias a una tna de ', (aCertificateOfDeposit rate * 100) printString, '%'.! !
 
 !AccountSummary methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:35:20'!
-depositValue: aDeposit
+doWithDeposit: aDeposit
 	lines add: 'Deposito por ', aDeposit value printString! !
 
 !AccountSummary methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:35:14'!
-transferDepositValue: aTransferDeposit
+doWithTransferDeposit: aTransferDeposit
 	lines add: 'Transferencia por ', aTransferDeposit value printString! !
 
 !AccountSummary methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:35:05'!
-transferWithdrawValue: aTransferWithdraw
+doWithTransferWithdraw: aTransferWithdraw
 	lines add: 'Transferencia por ', aTransferWithdraw value negated printString! !
 
 !AccountSummary methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:34:49'!
-withdrawValue: aWithdraw
+doWithWithdraw: aWithdraw
 	lines add: 'Extraccion por ', aWithdraw value printString! !
 
 
@@ -1150,23 +1150,23 @@ TransactionMethodObject subclass: #Balance
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !Balance methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:25:12'!
-certificateOfDepositValue: aCertificateOfDeposit
+doWithCertificateOfDeposit: aCertificateOfDeposit
 	sum := sum - aCertificateOfDeposit value! !
 
 !Balance methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:25:28'!
-depositValue: aDeposit
+doWithDeposit: aDeposit
 	sum := sum + aDeposit value! !
 
 !Balance methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:25:42'!
-transferDepositValue: aTransferDeposit
+doWithTransferDeposit: aTransferDeposit
 	sum := sum + aTransferDeposit value! !
 
 !Balance methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:25:48'!
-transferWithdrawValue: aTransferWithdraw
+doWithTransferWithdraw: aTransferWithdraw
 	sum := sum - aTransferWithdraw value! !
 
 !Balance methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:25:57'!
-withdrawValue: aWithdraw
+doWithWithdraw: aWithdraw
 	sum := sum - aWithdraw value! !
 
 
@@ -1188,23 +1188,23 @@ TransactionMethodObject subclass: #InvestmentEarnings
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 19:01:47'!
-certificateOfDepositValue: aCertificateOfDeposit
+doWithCertificateOfDeposit: aCertificateOfDeposit
 	sum := sum + (aCertificateOfDeposit value * (aCertificateOfDeposit duration * aCertificateOfDeposit rate / 360)).! !
 
 !InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:54:45'!
-depositValue: aDeposit
+doWithDeposit: aDeposit
 	"No es una inversion"! !
 
 !InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:54:45'!
-transferDepositValue: aTransferDeposit
+doWithTransferDeposit: aTransferDeposit
 	"No es una inversion"! !
 
 !InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:54:45'!
-transferWithdrawValue: aTransferWithdraw
+doWithTransferWithdraw: aTransferWithdraw
 	"No es una inversion"! !
 
 !InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:54:45'!
-withdrawValue: aWithdraw
+doWithWithdraw: aWithdraw
 	"No es una inversion"! !
 
 
@@ -1226,23 +1226,23 @@ TransactionMethodObject subclass: #InvestmentNet
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !InvestmentNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:44:01'!
-certificateOfDepositValue: aCertificateOfDeposit
+doWithCertificateOfDeposit: aCertificateOfDeposit
 	sum := sum + aCertificateOfDeposit value! !
 
 !InvestmentNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:43:46'!
-depositValue: aDeposit
+doWithDeposit: aDeposit
 	"No es una inversion"! !
 
 !InvestmentNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:43:43'!
-transferDepositValue: aTransferDeposit
+doWithTransferDeposit: aTransferDeposit
 	"No es una inversion"! !
 
 !InvestmentNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:43:38'!
-transferWithdrawValue: aTransferWithdraw
+doWithTransferWithdraw: aTransferWithdraw
 	"No es una inversion"! !
 
 !InvestmentNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:43:35'!
-withdrawValue: aWithdraw
+doWithWithdraw: aWithdraw
 	"No es una inversion"! !
 
 
@@ -1264,23 +1264,23 @@ TransactionMethodObject subclass: #TransferNet
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
 !TransferNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:50:44'!
-certificateOfDepositValue: aCertificateOfDeposit
+doWithCertificateOfDeposit: aCertificateOfDeposit
 	"No es una transferencia"! !
 
 !TransferNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:50:38'!
-depositValue: aDeposit
+doWithDeposit: aDeposit
 	"No es una transferencia"! !
 
 !TransferNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:50:57'!
-transferDepositValue: aTransferDeposit
+doWithTransferDeposit: aTransferDeposit
 	sum := sum + aTransferDeposit value! !
 
 !TransferNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:48:57'!
-transferWithdrawValue: aTransferWithdraw
+doWithTransferWithdraw: aTransferWithdraw
 	sum := sum - aTransferWithdraw value! !
 
 !TransferNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:48:23'!
-withdrawValue: aWithdraw
+doWithWithdraw: aWithdraw
 	"No es una transferencia"! !
 
 
