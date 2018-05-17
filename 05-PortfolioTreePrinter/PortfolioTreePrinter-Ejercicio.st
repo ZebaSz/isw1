@@ -590,6 +590,11 @@ do: aMethodObject
 	aMethodObject doWithCertificateOfDeposit: self.! !
 
 
+!CertificateOfDeposit methodsFor: 'evaluating' stamp: 'SAS 5/17/2018 16:04:38'!
+earnings
+	^value * (duration * rate / 360).! !
+
+
 !CertificateOfDeposit methodsFor: 'initialization' stamp: 'SAS 5/10/2018 20:43:42'!
 initializeFor: aValue during: aNumberOfDays at: aTna 
 	value := aValue.
@@ -1070,10 +1075,6 @@ doWithCertificateOfDeposit: aCertificateOfDeposit
 doWithDeposit: aDeposit
 	self subclassResponsibility.! !
 
-!TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:13:40'!
-initializeFor: aReceptiveAccount 
-	account := aReceptiveAccount.! !
-
 !TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:14:14'!
 doWithTransferDeposit: aTransferDeposit
 	self subclassResponsibility.! !
@@ -1085,6 +1086,10 @@ doWithTransferWithdraw: aTransferWithdraw
 !TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:14:06'!
 doWithWithdraw: aWithdraw
 	self subclassResponsibility.! !
+
+!TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:13:40'!
+initializeFor: aReceptiveAccount 
+	account := aReceptiveAccount.! !
 
 
 !TransactionMethodObject methodsFor: 'evaluating' stamp: 'SAS 5/15/2018 18:13:57'!
@@ -1187,9 +1192,9 @@ TransactionMethodObject subclass: #InvestmentEarnings
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 19:01:47'!
+!InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/17/2018 16:04:52'!
 doWithCertificateOfDeposit: aCertificateOfDeposit
-	sum := sum + (aCertificateOfDeposit value * (aCertificateOfDeposit duration * aCertificateOfDeposit rate / 360)).! !
+	sum := sum + (aCertificateOfDeposit earnings).! !
 
 !InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:54:45'!
 doWithDeposit: aDeposit
