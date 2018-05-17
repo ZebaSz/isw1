@@ -506,82 +506,29 @@ test29ReversePortfolioTreePrinterPrintsTheCompositeStartingFromTheLeaves
 	! !
 
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HAW 9/25/2017 21:44:47'!
+!PortfolioTest methodsFor: 'test support' stamp: 'SAS 5/16/2018 16:31:16'!
 accountSummaryLinesOf: aReceptiveAccount 
-	
-	^aReceptiveAccount accountSummary! !
+	^(AccountSummary for: aReceptiveAccount) value.! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'SAS 5/14/2018 18:46:11'!
-accountTransferNetOf: aReceptiveAccount 
-	^aReceptiveAccount transferNet! !
+!PortfolioTest methodsFor: 'test support' stamp: 'SAS 5/16/2018 16:30:50'!
+accountTransferNetOf: aReceptiveAccount
+	^(TransferNet for: aReceptiveAccount) value.! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'SAS 5/14/2018 18:45:58'!
+!PortfolioTest methodsFor: 'test support' stamp: 'SAS 5/16/2018 16:31:24'!
 investmentEarningsOf: aReceptiveAccount
-	^aReceptiveAccount investmentEarnings! !
+	^(InvestmentEarnings for: aReceptiveAccount) value.! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'SAS 5/14/2018 18:44:47'!
+!PortfolioTest methodsFor: 'test support' stamp: 'SAS 5/16/2018 16:30:42'!
 investmentNetOf: aReceptiveAccount
-	^aReceptiveAccount investmentNet! !
+	^(InvestmentNet for: aReceptiveAccount) value.! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HernanWilkinson 9/6/2016 19:43'!
+!PortfolioTest methodsFor: 'test support' stamp: 'SAS 5/16/2018 16:31:51'!
 portofolioTreeOf: aPortfolio namingAccountWith: aDictionary 
-	
-	self shouldBeImplemented ! !
+	^(PortfolioTreePrinter for: aPortfolio namingAccountWith: aDictionary) value.! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HernanWilkinson 9/6/2016 19:43'!
+!PortfolioTest methodsFor: 'test support' stamp: 'SAS 5/16/2018 16:32:04'!
 reversePortofolioTreeOf: aPortfolio namingAccountWith: aDictionary 
-	
-	self shouldBeImplemented ! !
-
-
-!classDefinition: #AccountMethodObject category: #'PortfolioTreePrinter-Ejercicio'!
-Object subclass: #AccountMethodObject
-	instanceVariableNames: 'portfolio'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'PortfolioTreePrinter-Ejercicio'!
-
-!AccountMethodObject methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:23:33'!
-initializeFor: aPortfolio
-	portfolio := aPortfolio.! !
-
-!AccountMethodObject methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:22:59'!
-portfolioValue: aPortfolio
-	self subclassResponsibility.! !
-
-!AccountMethodObject methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:23:16'!
-receptiveAccountValue: aReceptiveAccount
-	self subclassResponsibility.! !
-
-!AccountMethodObject methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:22:45'!
-value
-	self subclassResponsibility.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'AccountMethodObject class' category: #'PortfolioTreePrinter-Ejercicio'!
-AccountMethodObject class
-	instanceVariableNames: ''!
-
-!AccountMethodObject class methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:23:54'!
-for: aPortfolio
-	^self new initializeFor: aPortfolio.! !
-
-
-!classDefinition: #PortfolioTreePrinter category: #'PortfolioTreePrinter-Ejercicio'!
-AccountMethodObject subclass: #PortfolioTreePrinter
-	instanceVariableNames: 'lines'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'PortfolioTreePrinter-Ejercicio'!
-
-
-!classDefinition: #ReversePortfolioTreePrinter category: #'PortfolioTreePrinter-Ejercicio'!
-AccountMethodObject subclass: #ReversePortfolioTreePrinter
-	instanceVariableNames: 'lines'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'PortfolioTreePrinter-Ejercicio'!
+	^(ReversePortfolioTreePrinter for: aPortfolio namingAccountWith: aDictionary) value.! !
 
 
 !classDefinition: #AccountTransaction category: #'PortfolioTreePrinter-Ejercicio'!
@@ -591,15 +538,15 @@ Object subclass: #AccountTransaction
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!AccountTransaction methodsFor: 'evaluating' stamp: 'SAS 5/14/2018 18:05:12'!
+!AccountTransaction methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:05:12'!
 call: aMethodObject
 	self subclassResponsibility.! !
+
 
 !AccountTransaction methodsFor: 'evaluating' stamp: 'HernanWilkinson 7/14/2011 06:48'!
 value
 
 	self subclassResponsibility ! !
-
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -625,27 +572,29 @@ AccountTransaction subclass: #CertificateOfDeposit
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!CertificateOfDeposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:41:20'!
-call: aMethodObject
-	aMethodObject certificateOfDepositValue: self.! !
-
-!CertificateOfDeposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:39:04'!
+!CertificateOfDeposit methodsFor: 'accessing' stamp: 'SAS 5/14/2018 18:39:04'!
 duration
 	^duration.! !
 
-!CertificateOfDeposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/10/2018 20:43:42'!
+!CertificateOfDeposit methodsFor: 'accessing' stamp: 'SAS 5/14/2018 18:39:11'!
+rate
+	^rate.! !
+
+!CertificateOfDeposit methodsFor: 'accessing' stamp: 'SAS 5/10/2018 20:49:51'!
+value
+	^value.! !
+
+
+!CertificateOfDeposit methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:41:20'!
+call: aMethodObject
+	aMethodObject certificateOfDepositValue: self.! !
+
+
+!CertificateOfDeposit methodsFor: 'initialization' stamp: 'SAS 5/10/2018 20:43:42'!
 initializeFor: aValue during: aNumberOfDays at: aTna 
 	value := aValue.
 	duration := aNumberOfDays.
 	rate := aTna.! !
-
-!CertificateOfDeposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:39:11'!
-rate
-	^rate.! !
-
-!CertificateOfDeposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/10/2018 20:49:51'!
-value
-	^value.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -676,31 +625,21 @@ AccountTransaction subclass: #Deposit
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
+!Deposit methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:32:19'!
+call: aMethodObject
+	aMethodObject depositValue: self.! !
+
+
 !Deposit methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:45'!
 initializeFor: aValue
 
 	value := aValue ! !
-
-!Deposit methodsFor: 'initialization' stamp: 'SAS 5/10/2018 19:53:15'!
-initializeFor: aValue from: aTransfer
-
-	value := aValue.
-	transfer := aTransfer.! !
 
 
 !Deposit methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:38'!
 value
 
 	^ value! !
-
-
-!Deposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:32:19'!
-call: aMethodObject
-	^aMethodObject depositValue: self.! !
-
-!Deposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/10/2018 19:56:32'!
-transfer
-	^transfer! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -713,27 +652,12 @@ for: aValue
 
 	^ self new initializeFor: aValue ! !
 
-!Deposit class methodsFor: 'instance creation' stamp: 'SAS 5/10/2018 19:53:46'!
-for: aValue from: aTransfer
-
-	^ self new initializeFor: aValue from: aTransfer.! !
-
 !Deposit class methodsFor: 'instance creation' stamp: 'HernanWilkinson 7/13/2011 19:41'!
 register: aValue on: account
 
 	| withdraw |
 	
 	withdraw := self for: aValue.
-	account register: withdraw.
-		
-	^ withdraw! !
-
-!Deposit class methodsFor: 'instance creation' stamp: 'SAS 5/10/2018 19:53:32'!
-register: aValue on: account from: aTransfer
-
-	| withdraw |
-	
-	withdraw := self for: aValue from: aTransfer.
 	account register: withdraw.
 		
 	^ withdraw! !
@@ -746,17 +670,18 @@ AccountTransaction subclass: #TransferTransaction
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!TransferTransaction methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:07:02'!
-initializeFor: aTransfer
-	transfer := aTransfer.! !
-
-!TransferTransaction methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:07:29'!
+!TransferTransaction methodsFor: 'accessing' stamp: 'SAS 5/14/2018 18:07:29'!
 transfer
 	^transfer.! !
 
-!TransferTransaction methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:17:09'!
+!TransferTransaction methodsFor: 'accessing' stamp: 'SAS 5/14/2018 18:17:09'!
 value
 	^transfer value! !
+
+
+!TransferTransaction methodsFor: 'initialization' stamp: 'SAS 5/14/2018 18:07:02'!
+initializeFor: aTransfer
+	transfer := aTransfer.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -764,7 +689,7 @@ value
 TransferTransaction class
 	instanceVariableNames: ''!
 
-!TransferTransaction class methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:07:18'!
+!TransferTransaction class methodsFor: 'instance creation' stamp: 'SAS 5/14/2018 18:07:18'!
 for: aTransfer
 	^self new initializeFor: aTransfer.! !
 
@@ -776,9 +701,9 @@ TransferTransaction subclass: #TransferDeposit
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:33:53'!
+!TransferDeposit methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:33:53'!
 call: aMethodObject
-	^aMethodObject transferDepositValue: self.! !
+	aMethodObject transferDepositValue: self.! !
 
 
 !classDefinition: #TransferWithdraw category: #'PortfolioTreePrinter-Ejercicio'!
@@ -788,9 +713,9 @@ TransferTransaction subclass: #TransferWithdraw
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:33:30'!
+!TransferWithdraw methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:33:30'!
 call: aMethodObject
-	^aMethodObject transferWithdrawValue: self.! !
+	aMethodObject transferWithdrawValue: self.! !
 
 
 !classDefinition: #Withdraw category: #'PortfolioTreePrinter-Ejercicio'!
@@ -800,31 +725,21 @@ AccountTransaction subclass: #Withdraw
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
+!Withdraw methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:33:00'!
+call: aMethodObject
+	aMethodObject withdrawValue: self.! !
+
+
 !Withdraw methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:46'!
 initializeFor: aValue
 
 	value := aValue ! !
-
-!Withdraw methodsFor: 'initialization' stamp: 'SAS 5/10/2018 19:52:47'!
-initializeFor: aValue from: aTransfer
-
-	value := aValue.
-	transfer := aTransfer.! !
 
 
 !Withdraw methodsFor: 'value' stamp: 'HernanWilkinson 7/14/2011 05:54'!
 value
 
 	^ value ! !
-
-
-!Withdraw methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:33:00'!
-call: aMethodObject
-	^aMethodObject withdrawValue: self.! !
-
-!Withdraw methodsFor: 'as yet unclassified' stamp: 'SAS 5/10/2018 19:56:37'!
-transfer
-	^transfer! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -837,11 +752,6 @@ for: aValue
 
 	^ self new initializeFor: aValue ! !
 
-!Withdraw class methodsFor: 'instance creation' stamp: 'SAS 5/10/2018 19:51:35'!
-for: aValue from: aTransaction
-
-	^ self new initializeFor: aValue from: aTransaction.! !
-
 !Withdraw class methodsFor: 'instance creation' stamp: 'HernanWilkinson 7/14/2011 05:32'!
 register: aValue on: account
 
@@ -852,15 +762,90 @@ register: aValue on: account
 		
 	^ withdraw! !
 
-!Withdraw class methodsFor: 'instance creation' stamp: 'SAS 5/10/2018 19:51:55'!
-register: aValue on: account from: aTransaction
+
+!classDefinition: #PortfolioPrinterMethodObject category: #'PortfolioTreePrinter-Ejercicio'!
+Object subclass: #PortfolioPrinterMethodObject
+	instanceVariableNames: 'portfolio dictionary depth lines'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'PortfolioTreePrinter-Ejercicio'!
 
-	| withdraw |
-	
-	withdraw := self for: aValue from: aTransaction.
-	account register: withdraw.
-		
-	^ withdraw! !
+!PortfolioPrinterMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:22:59'!
+portfolioValue: aPortfolio
+	self subclassResponsibility.! !
+
+!PortfolioPrinterMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:23:16'!
+receptiveAccountValue: aReceptiveAccount
+	self subclassResponsibility.! !
+
+
+!PortfolioPrinterMethodObject methodsFor: 'evaluating' stamp: 'SAS 5/16/2018 16:50:59'!
+formatLineFor: aPortfolio
+	|line|
+	line := dictionary at: aPortfolio.
+	depth timesRepeat: [ line := ' ',line ].
+	^line.! !
+
+!PortfolioPrinterMethodObject methodsFor: 'evaluating' stamp: 'SAS 5/16/2018 16:52:11'!
+value
+	lines := OrderedCollection new.
+	portfolio call: self.
+	^lines! !
+
+
+!PortfolioPrinterMethodObject methodsFor: 'initialization' stamp: 'SAS 5/16/2018 16:51:15'!
+initializeFor: aPortfolio namingAccountWith: aDictionary
+	portfolio := aPortfolio.
+	dictionary := aDictionary.
+	depth := 0.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'PortfolioPrinterMethodObject class' category: #'PortfolioTreePrinter-Ejercicio'!
+PortfolioPrinterMethodObject class
+	instanceVariableNames: ''!
+
+!PortfolioPrinterMethodObject class methodsFor: 'instance creation' stamp: 'SAS 5/16/2018 16:35:01'!
+for: aPortfolio namingAccountWith: aDictionary
+	^self new initializeFor: aPortfolio namingAccountWith: aDictionary.! !
+
+
+!classDefinition: #PortfolioTreePrinter category: #'PortfolioTreePrinter-Ejercicio'!
+PortfolioPrinterMethodObject subclass: #PortfolioTreePrinter
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'PortfolioTreePrinter-Ejercicio'!
+
+!PortfolioTreePrinter methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 16:41:57'!
+portfolioValue: aPortfolio 
+	lines add: (self formatLineFor: aPortfolio).
+	depth := depth + 1.
+	aPortfolio eachAccountDo: self.
+	depth := depth -  1.! !
+
+!PortfolioTreePrinter methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 16:48:09'!
+receptiveAccountValue: aReceptiveAccount 
+	lines add: (self formatLineFor: aReceptiveAccount).! !
+
+
+!classDefinition: #ReversePortfolioTreePrinter category: #'PortfolioTreePrinter-Ejercicio'!
+PortfolioPrinterMethodObject subclass: #ReversePortfolioTreePrinter
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'PortfolioTreePrinter-Ejercicio'!
+
+!ReversePortfolioTreePrinter methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 18:22:17'!
+portfolioValue: aPortfolio 
+	lines addFirst: (self formatLineFor: aPortfolio).
+	depth := depth + 1.
+	aPortfolio eachAccountDo: self.
+	depth := depth -  1.! !
+
+!ReversePortfolioTreePrinter methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 18:21:26'!
+receptiveAccountValue: aReceptiveAccount 
+	lines addFirst: (self formatLineFor: aReceptiveAccount).! !
 
 
 !classDefinition: #SummarizingAccount category: #'PortfolioTreePrinter-Ejercicio'!
@@ -886,6 +871,10 @@ balance
 
 	self subclassResponsibility ! !
 
+!SummarizingAccount methodsFor: 'transactions' stamp: 'SAS 5/16/2018 16:38:20'!
+call: aMethodObject
+	self subclassResponsibility.! !
+
 !SummarizingAccount methodsFor: 'transactions' stamp: 'HernanWilkinson 7/13/2011 18:35'!
 transactions
 
@@ -898,6 +887,21 @@ SummarizingAccount subclass: #Portfolio
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
+
+!Portfolio methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 16:39:04'!
+call: aMethodObject
+	aMethodObject portfolioValue: self.! !
+
+!Portfolio methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 16:47:10'!
+eachAccountDo: aMethodObject
+	accounts do: [ :account | account call: aMethodObject ].! !
+
+
+!Portfolio methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 19:19'!
+initializeWithAll: aCollectionOfAccounts
+
+	accounts := aCollectionOfAccounts   ! !
+
 
 !Portfolio methodsFor: 'testing' stamp: 'HAW 5/8/2018 16:46:26'!
 anyManagedAccountManages: anAccount 
@@ -936,12 +940,6 @@ transactionsOf: anAccount
 		ifTrue: [ anAccount transactions ] 
 		ifFalse: [ self error: self class accountNotManagedMessageDescription]
 	! !
-
-
-!Portfolio methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 19:19'!
-initializeWithAll: aCollectionOfAccounts
-
-	accounts := aCollectionOfAccounts   ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1005,11 +1003,35 @@ SummarizingAccount subclass: #ReceptiveAccount
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
+!ReceptiveAccount methodsFor: 'accessing' stamp: 'SAS 5/14/2018 18:53:55'!
+eachTransactionDo: aMethodObject
+	self transactions do: [ :transaction |
+		transaction call: aMethodObject ].! !
+
+
+!ReceptiveAccount methodsFor: 'dispatching' stamp: 'SAS 5/16/2018 16:47:36'!
+call: aMethodObject
+	aMethodObject receptiveAccountValue: self.! !
+
+
 !ReceptiveAccount methodsFor: 'initialization' stamp: 'HernanWilkinson 7/13/2011 18:35'!
 initialize
 
 	super initialize.
 	transactions := OrderedCollection new.! !
+
+
+!ReceptiveAccount methodsFor: 'testing' stamp: 'HernanWilkinson 7/13/2011 18:37'!
+manages: anAccount
+
+	^ self = anAccount 
+! !
+
+!ReceptiveAccount methodsFor: 'testing' stamp: 'HernanWilkinson 7/13/2011 18:37'!
+registers: aTtransaction
+
+	^ transactions includes: aTtransaction 
+! !
 
 
 !ReceptiveAccount methodsFor: 'transactions' stamp: 'SAS 5/15/2018 18:26:16'!
@@ -1027,41 +1049,6 @@ transactions
 
 	^ transactions copy! !
 
-
-!ReceptiveAccount methodsFor: 'testing' stamp: 'HernanWilkinson 7/13/2011 18:37'!
-manages: anAccount
-
-	^ self = anAccount 
-! !
-
-!ReceptiveAccount methodsFor: 'testing' stamp: 'HernanWilkinson 7/13/2011 18:37'!
-registers: aTtransaction
-
-	^ transactions includes: aTtransaction 
-! !
-
-
-!ReceptiveAccount methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:27:12'!
-accountSummary
-	^(AccountSummary for: self) value.! !
-
-!ReceptiveAccount methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:53:55'!
-eachTransactionDo: aMethodObject
-	self transactions do: [ :transaction |
-		transaction call: aMethodObject ].! !
-
-!ReceptiveAccount methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:57:36'!
-investmentEarnings
-	^(InvestmentEarnings for: self) value! !
-
-!ReceptiveAccount methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:49:53'!
-investmentNet
-	^(InvestmentNet for: self) value.! !
-
-!ReceptiveAccount methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:51:45'!
-transferNet
-	^(TransferNet for: self) value.! !
-
 
 !classDefinition: #TransactionMethodObject category: #'PortfolioTreePrinter-Ejercicio'!
 Object subclass: #TransactionMethodObject
@@ -1070,36 +1057,38 @@ Object subclass: #TransactionMethodObject
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!TransactionMethodObject methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:16:30'!
+!TransactionMethodObject methodsFor: 'accessing' stamp: 'SAS 5/15/2018 18:16:30'!
 account
 	^account! !
 
-!TransactionMethodObject methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:14:39'!
+
+!TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:14:39'!
 certificateOfDepositValue: aCertificateOfDeposit
 	self subclassResponsibility.! !
 
-!TransactionMethodObject methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:14:36'!
+!TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:14:36'!
 depositValue: aDeposit
 	self subclassResponsibility.! !
 
-!TransactionMethodObject methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:13:40'!
+!TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:13:40'!
 initializeFor: aReceptiveAccount 
 	account := aReceptiveAccount.! !
 
-!TransactionMethodObject methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:14:14'!
+!TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:14:14'!
 transferDepositValue: aTransferDeposit
 	self subclassResponsibility.! !
 
-!TransactionMethodObject methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:14:10'!
+!TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:14:10'!
 transferWithdrawValue: aTransferWithdraw
 	self subclassResponsibility.! !
 
-!TransactionMethodObject methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:13:57'!
-value
+!TransactionMethodObject methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:14:06'!
+withdrawValue: aWithdraw
 	self subclassResponsibility.! !
 
-!TransactionMethodObject methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:14:06'!
-withdrawValue: aWithdraw
+
+!TransactionMethodObject methodsFor: 'evaluating' stamp: 'SAS 5/15/2018 18:13:57'!
+value
 	self subclassResponsibility.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -1120,25 +1109,30 @@ TransactionMethodObject subclass: #AccountSummary
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:40:11'!
+!AccountSummary methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:40:11'!
 certificateOfDepositValue: aCertificateOfDeposit
 	lines add: 'Plazo fijo por ', aCertificateOfDeposit value printString,
 		' durante ', aCertificateOfDeposit duration printString ,
 		' dias a una tna de ', (aCertificateOfDeposit rate * 100) printString, '%'.! !
 
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:35:20'!
+!AccountSummary methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:35:20'!
 depositValue: aDeposit
 	lines add: 'Deposito por ', aDeposit value printString! !
 
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:35:14'!
+!AccountSummary methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:35:14'!
 transferDepositValue: aTransferDeposit
 	lines add: 'Transferencia por ', aTransferDeposit value printString! !
 
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:35:05'!
+!AccountSummary methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:35:05'!
 transferWithdrawValue: aTransferWithdraw
 	lines add: 'Transferencia por ', aTransferWithdraw value negated printString! !
 
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:21:44'!
+!AccountSummary methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:34:49'!
+withdrawValue: aWithdraw
+	lines add: 'Extraccion por ', aWithdraw value printString! !
+
+
+!AccountSummary methodsFor: 'evaluating' stamp: 'SAS 5/15/2018 18:21:44'!
 value
 	
 	lines := OrderedCollection new.
@@ -1146,10 +1140,6 @@ value
 	self account eachTransactionDo: self.
 	
 	^lines.! !
-
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:34:49'!
-withdrawValue: aWithdraw
-	lines add: 'Extraccion por ', aWithdraw value printString! !
 
 
 !classDefinition: #Balance category: #'PortfolioTreePrinter-Ejercicio'!
@@ -1159,23 +1149,28 @@ TransactionMethodObject subclass: #Balance
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!Balance methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:25:12'!
+!Balance methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:25:12'!
 certificateOfDepositValue: aCertificateOfDeposit
 	sum := sum - aCertificateOfDeposit value! !
 
-!Balance methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:25:28'!
+!Balance methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:25:28'!
 depositValue: aDeposit
 	sum := sum + aDeposit value! !
 
-!Balance methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:25:42'!
+!Balance methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:25:42'!
 transferDepositValue: aTransferDeposit
 	sum := sum + aTransferDeposit value! !
 
-!Balance methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:25:48'!
+!Balance methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:25:48'!
 transferWithdrawValue: aTransferWithdraw
 	sum := sum - aTransferWithdraw value! !
 
-!Balance methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:24:43'!
+!Balance methodsFor: 'dispatching' stamp: 'SAS 5/15/2018 18:25:57'!
+withdrawValue: aWithdraw
+	sum := sum - aWithdraw value! !
+
+
+!Balance methodsFor: 'evaluating' stamp: 'SAS 5/15/2018 18:24:43'!
 value
 	
 	sum := 0.
@@ -1183,10 +1178,6 @@ value
 	self account eachTransactionDo: self.
 	
 	^sum.! !
-
-!Balance methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:25:57'!
-withdrawValue: aWithdraw
-	sum := sum - aWithdraw value! !
 
 
 !classDefinition: #InvestmentEarnings category: #'PortfolioTreePrinter-Ejercicio'!
@@ -1196,23 +1187,28 @@ TransactionMethodObject subclass: #InvestmentEarnings
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!InvestmentEarnings methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 19:01:47'!
+!InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 19:01:47'!
 certificateOfDepositValue: aCertificateOfDeposit
 	sum := sum + (aCertificateOfDeposit value * (aCertificateOfDeposit duration * aCertificateOfDeposit rate / 360)).! !
 
-!InvestmentEarnings methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:54:45'!
+!InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:54:45'!
 depositValue: aDeposit
 	"No es una inversion"! !
 
-!InvestmentEarnings methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:54:45'!
+!InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:54:45'!
 transferDepositValue: aTransferDeposit
 	"No es una inversion"! !
 
-!InvestmentEarnings methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:54:45'!
+!InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:54:45'!
 transferWithdrawValue: aTransferWithdraw
 	"No es una inversion"! !
 
-!InvestmentEarnings methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:21:48'!
+!InvestmentEarnings methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:54:45'!
+withdrawValue: aWithdraw
+	"No es una inversion"! !
+
+
+!InvestmentEarnings methodsFor: 'evaluating' stamp: 'SAS 5/15/2018 18:21:48'!
 value
 	
 	sum := 0.
@@ -1220,10 +1216,6 @@ value
 	self account eachTransactionDo: self.
 	
 	^sum.! !
-
-!InvestmentEarnings methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:54:45'!
-withdrawValue: aWithdraw
-	"No es una inversion"! !
 
 
 !classDefinition: #InvestmentNet category: #'PortfolioTreePrinter-Ejercicio'!
@@ -1233,23 +1225,28 @@ TransactionMethodObject subclass: #InvestmentNet
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!InvestmentNet methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:44:01'!
+!InvestmentNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:44:01'!
 certificateOfDepositValue: aCertificateOfDeposit
 	sum := sum + aCertificateOfDeposit value! !
 
-!InvestmentNet methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:43:46'!
+!InvestmentNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:43:46'!
 depositValue: aDeposit
 	"No es una inversion"! !
 
-!InvestmentNet methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:43:43'!
+!InvestmentNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:43:43'!
 transferDepositValue: aTransferDeposit
 	"No es una inversion"! !
 
-!InvestmentNet methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:43:38'!
+!InvestmentNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:43:38'!
 transferWithdrawValue: aTransferWithdraw
 	"No es una inversion"! !
 
-!InvestmentNet methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:21:52'!
+!InvestmentNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:43:35'!
+withdrawValue: aWithdraw
+	"No es una inversion"! !
+
+
+!InvestmentNet methodsFor: 'evaluating' stamp: 'SAS 5/15/2018 18:21:52'!
 value
 	
 	sum := 0.
@@ -1257,10 +1254,6 @@ value
 	self account eachTransactionDo: self.
 	
 	^sum.! !
-
-!InvestmentNet methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:43:35'!
-withdrawValue: aWithdraw
-	"No es una inversion"! !
 
 
 !classDefinition: #TransferNet category: #'PortfolioTreePrinter-Ejercicio'!
@@ -1270,23 +1263,28 @@ TransactionMethodObject subclass: #TransferNet
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!TransferNet methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:50:44'!
+!TransferNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:50:44'!
 certificateOfDepositValue: aCertificateOfDeposit
 	"No es una transferencia"! !
 
-!TransferNet methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:50:38'!
+!TransferNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:50:38'!
 depositValue: aDeposit
 	"No es una transferencia"! !
 
-!TransferNet methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:50:57'!
+!TransferNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:50:57'!
 transferDepositValue: aTransferDeposit
 	sum := sum + aTransferDeposit value! !
 
-!TransferNet methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:48:57'!
+!TransferNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:48:57'!
 transferWithdrawValue: aTransferWithdraw
 	sum := sum - aTransferWithdraw value! !
 
-!TransferNet methodsFor: 'as yet unclassified' stamp: 'SAS 5/15/2018 18:21:56'!
+!TransferNet methodsFor: 'dispatching' stamp: 'SAS 5/14/2018 18:48:23'!
+withdrawValue: aWithdraw
+	"No es una transferencia"! !
+
+
+!TransferNet methodsFor: 'evaluating' stamp: 'SAS 5/15/2018 18:21:56'!
 value
 	
 	sum := 0.
@@ -1294,10 +1292,6 @@ value
 	self account eachTransactionDo: self.
 	
 	^sum.! !
-
-!TransferNet methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:48:23'!
-withdrawValue: aWithdraw
-	"No es una transferencia"! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1312,21 +1306,21 @@ from: aReceptiveAccount
 
 !classDefinition: #Transfer category: #'PortfolioTreePrinter-Ejercicio'!
 Object subclass: #Transfer
-	instanceVariableNames: 'value deposit withdraw'
+	instanceVariableNames: 'value source destination'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!Transfer methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:09:57'!
-initializeFor: aValue withDeposit: aTransferDesposit withWithdraw: aTransferWithdraw
-	value := aValue.
-	deposit := aTransferDesposit.
-	withdraw := aTransferWithdraw.
-! !
-
-!Transfer methodsFor: 'as yet unclassified' stamp: 'SAS 5/10/2018 19:57:17'!
+!Transfer methodsFor: 'accessing' stamp: 'SAS 5/10/2018 19:57:17'!
 value
 	^value! !
+
+
+!Transfer methodsFor: 'initialization' stamp: 'SAS 5/16/2018 18:39:07'!
+initializeFor: aValue from: aSourceAccount to: aDestinationAccount
+	value := aValue.
+	source := aSourceAccount .
+	destination := aDestinationAccount .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1334,16 +1328,15 @@ value
 Transfer class
 	instanceVariableNames: ''!
 
-!Transfer class methodsFor: 'as yet unclassified' stamp: 'SAS 5/14/2018 18:12:59'!
+!Transfer class methodsFor: 'instance creation' stamp: 'SAS 5/16/2018 18:40:16'!
 register: aValue from: sourceAccount to: destinationAccount
 	
-	|transfer deposit withdraw|
+	|transfer|
 	
-	transfer := self new.
+	transfer := self new initializeFor: aValue from: sourceAccount to: destinationAccount.
 	
-	deposit := TransferDeposit register: transfer on: destinationAccount.
-	withdraw := TransferWithdraw register: transfer on: sourceAccount.
+	TransferDeposit register: transfer on: destinationAccount.
+	TransferWithdraw register: transfer on: sourceAccount.
 	
-	transfer initializeFor: aValue withDeposit: deposit withWithdraw: withdraw.
 	
 	^transfer.! !
