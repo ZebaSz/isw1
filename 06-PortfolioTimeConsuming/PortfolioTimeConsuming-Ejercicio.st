@@ -1287,24 +1287,24 @@ for: aReceptiveAccount
 
 !classDefinition: #Future category: #'PortfolioTimeConsuming-Ejercicio'!
 Object subclass: #Future
-	instanceVariableNames: 'sem val'
+	instanceVariableNames: 'doneSignal promisedValue'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
 
 !Future methodsFor: 'initialization' stamp: 'IT 5/19/2018 12:47:56'!
 initializeEvaluating: aBlock
-	sem := Semaphore new.
+	doneSignal := Semaphore new.
 	[
-		val := aBlock value.
-		sem signal.
+		promisedValue := aBlock value.
+		doneSignal signal.
 	] fork.! !
 
 
 !Future methodsFor: 'evaluation' stamp: 'IT 5/19/2018 12:47:51'!
 value
-	sem wait.
-	^val! !
+	doneSignal wait.
+	^promisedValue! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
