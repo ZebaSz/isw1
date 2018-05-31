@@ -5,177 +5,167 @@ TestCase subclass: #TicTacToeTest
 	poolDictionaries: ''
 	category: 'TicTacToe-Ejercicio'!
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 09:59:04'!
-test01
-
-	|game|
-	
-	game := TicTacToe new.
-	
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:09:48'!
+test01NewGameIsEmpty
+	| game |
+	game _ TicTacToe new.
 	self assert: game Xs isEmpty.
-	self assert: game Os isEmpty.
-	! !
+	self assert: game Os isEmpty.! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 10:20:33'!
-test02
-
-	|game|
-	
-	game := TicTacToe new.
-
-	game putXAt: 1@1.
-	
-	self assert: 1 equals: game Xs size.
-	self assert: (game Xs includes: 1@1).
-	self assert: game Os isEmpty.
-	
-	! !
-
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 10:50:55'!
-test03
-
-	|game|
-	
-	game := TicTacToe new.
-
-	game putXAt: 1@1.
-	game putOAt: 2@2.
-	
-	self assert: 1 equals: game Xs size.
-	self assert: (game Xs includes: 1@1).
-	self assert: 1 equals: game Os size.
-	self assert: (game Os includes: 2@2).
-	! !
-
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 11:01:26'!
-test04
-
-	|game|
-	
-	game := TicTacToe new.
-
-	game putXAt: 1@1.
-	
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:10:24'!
+test02PuttingAnXAtAValidPositionAddsItToTheBoard
+	| game |
+	game _ TicTacToe new.
+	game putXAt: 1 @ 1.
 	self
-	should: [game putXAt: 2@2]
-	raise: Error - MessageNotUnderstood
-	withExceptionDo: [ :anError|
-		self assert: TicTacToe notXTurnErrorMessage equals: anError messageText.	
-		self assert: 1 equals: game Xs size.
-		self assert: (game Xs includes: 1@1).
-		self assert: game Os isEmpty.
-		].
-	! !
+		assert: 1
+		equals: game Xs size.
+	self assert: (game Xs includes: 1 @ 1).
+	self assert: game Os isEmpty.! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:45:22'!
-test05
-
-	|game|
-	
-	game := TicTacToe new.
-
-	game putXAt: 1@1.
-	game putOAt: 2@2.
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:11:03'!
+test03PuttingAnXAndAnOAtAValidsPositionsAddsBothToTheBoard
+	| game |
+	game _ TicTacToe new.
+	game putXAt: 1 @ 1.
+	game putOAt: 2 @ 2.
 	self
-	should: [game putOAt: 3@3]
-	raise: Error - MessageNotUnderstood
-	withExceptionDo: [ :anError|
-		self assert: TicTacToe notOTurnErrorMessage equals: anError messageText.	
-		self assert: 1 equals: game Xs size.
-		self assert: (game Xs includes: 1@1).
-		self assert: 1 equals: game Os size.
-		self assert: (game Os includes: 2@2).
-		].
-	! !
-
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 11:18:20'!
-test06
-
-	|game|
-	
-	game := TicTacToe new.
-
-	game putXAt: 1@1.
-	game putOAt: 2@2.
+		assert: 1
+		equals: game Xs size.
+	self assert: (game Xs includes: 1 @ 1).
 	self
-	should: [game putXAt: 1@1]
-	raise: Error - MessageNotUnderstood
-	withExceptionDo: [ :anError|
-		self assert: TicTacToe positionTakenErrorMessage equals: anError messageText.	
-		self assert: 1 equals: game Xs size.
-		self assert: (game Xs includes: 1@1).
-		self assert: 1 equals: game Os size.
-		self assert: (game Os includes: 2@2).
-		].
-	! !
+		assert: 1
+		equals: game Os size.
+	self assert: (game Os includes: 2 @ 2).! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 11:37:38'!
-test07
-
-	|game|
-	
-	game := TicTacToe new.
-
-	game putXAt: 1@1.
-	game putOAt: 2@2.
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:11:35'!
+test04CantPutAnXWhenItsOsTurn
+	| game |
+	game _ TicTacToe new.
+	game putXAt: 1 @ 1.
 	self
-	should: [game putXAt: 2@2]
-	raise: Error - MessageNotUnderstood
-	withExceptionDo: [ :anError|
-		self assert: TicTacToe positionTakenErrorMessage equals: anError messageText.	
-		self assert: 1 equals: game Xs size.
-		self assert: (game Xs includes: 1@1).
-		self assert: 1 equals: game Os size.
-		self assert: (game Os includes: 2@2).
-		].
-	! !
+		should: [ game putXAt: 2 @ 2 ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self
+				assert: TicTacToe notXTurnErrorMessage
+				equals: anError messageText.
+			self
+				assert: 1
+				equals: game Xs size.
+			self assert: (game Xs includes: 1 @ 1).
+			self assert: game Os isEmpty ].! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 11:45:04'!
-test08
-
-	|game|
-	
-	game := TicTacToe new.
-
-	game putXAt: 1@1.
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:11:55'!
+test05CantPutAnOWhenItsXsTurn
+	| game |
+	game _ TicTacToe new.
+	game putXAt: 1 @ 1.
+	game putOAt: 2 @ 2.
 	self
-	should: [game putOAt: 1@1]
-	raise: Error - MessageNotUnderstood
-	withExceptionDo: [ :anError|
-		self assert: TicTacToe positionTakenErrorMessage equals: anError messageText.	
-		self assert: 1 equals: game Xs size.
-		self assert: (game Xs includes: 1@1).
-		self assert:  game Os isEmpty.
+		should: [ game putOAt: 3 @ 3 ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self
+				assert: TicTacToe notOTurnErrorMessage
+				equals: anError messageText.
+			self
+				assert: 1
+				equals: game Xs size.
+			self assert: (game Xs includes: 1 @ 1).
+			self
+				assert: 1
+				equals: game Os size.
+			self assert: (game Os includes: 2 @ 2) ].! !
 
-		].
-	! !
-
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 12:12:12'!
-test09
-
-	|game|
-	
-	game := TicTacToe new.
-
-	game putXAt: 1@1.
-	game putOAt: 2@2.
-	game putXAt: 3@3.
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:13:24'!
+test06CantPutAnXAtAPositionWithAnX
+	| game |
+	game _ TicTacToe new.
+	game putXAt: 1 @ 1.
+	game putOAt: 2 @ 2.
 	self
-	should: [game putOAt: 2@2]
-	raise: Error - MessageNotUnderstood
-	withExceptionDo: [ :anError|
-		self assert: TicTacToe positionTakenErrorMessage equals: anError messageText.	
-		self assert: 2 equals: game Xs size.
-		self assert: (game Xs includes: 1@1).
-		self assert: (game Xs includes: 3@3).
-		self assert: 1 equals: game Os size.
-		self assert: (game Os includes: 2@2).
-		
-		].
-	! !
+		should: [ game putXAt: 1 @ 1 ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self
+				assert: TicTacToe positionTakenErrorMessage
+				equals: anError messageText.
+			self
+				assert: 1
+				equals: game Xs size.
+			self assert: (game Xs includes: 1 @ 1).
+			self
+				assert: 1
+				equals: game Os size.
+			self assert: (game Os includes: 2 @ 2) ].! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:10:37'!
-test10
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:13:08'!
+test07CantPutAnXAtAPositionWithAnO
+	| game |
+	game _ TicTacToe new.
+	game putXAt: 1 @ 1.
+	game putOAt: 2 @ 2.
+	self
+		should: [ game putXAt: 2 @ 2 ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self
+				assert: TicTacToe positionTakenErrorMessage
+				equals: anError messageText.
+			self
+				assert: 1
+				equals: game Xs size.
+			self assert: (game Xs includes: 1 @ 1).
+			self
+				assert: 1
+				equals: game Os size.
+			self assert: (game Os includes: 2 @ 2) ].! !
+
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:13:48'!
+test08CantPutAnOAtAPositionWithAnX
+	| game |
+	game _ TicTacToe new.
+	game putXAt: 1 @ 1.
+	self
+		should: [ game putOAt: 1 @ 1 ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self
+				assert: TicTacToe positionTakenErrorMessage
+				equals: anError messageText.
+			self
+				assert: 1
+				equals: game Xs size.
+			self assert: (game Xs includes: 1 @ 1).
+			self assert: game Os isEmpty ].! !
+
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:14:10'!
+test09CantPutAnOAtAPositonWithAnO
+	| game |
+	game _ TicTacToe new.
+	game putXAt: 1 @ 1.
+	game putOAt: 2 @ 2.
+	game putXAt: 3 @ 3.
+	self
+		should: [ game putOAt: 2 @ 2 ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self
+				assert: TicTacToe positionTakenErrorMessage
+				equals: anError messageText.
+			self
+				assert: 2
+				equals: game Xs size.
+			self assert: (game Xs includes: 1 @ 1).
+			self assert: (game Xs includes: 3 @ 3).
+			self
+				assert: 1
+				equals: game Os size.
+			self assert: (game Os includes: 2 @ 2) ].! !
+
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:14:57'!
+test10ThereAreNoWinnersIfTheGameIsntOver
 	| game |
 	game _ TicTacToe new.
 	game putXAt: 1 @ 1.
@@ -185,8 +175,8 @@ test10
 	self deny: game hasPlayerOWon.
 	self deny: game hasPlayerXWon.! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:10:37'!
-test11
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:17:49'!
+test11XWinsIfHeOccupiesEntireFirstRow
 	| game |
 	game _ TicTacToe new.
 	game putXAt: 1 @ 1.
@@ -197,8 +187,8 @@ test11
 	self assert: game hasPlayerXWon.
 	self deny: game hasPlayerOWon.! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:10:37'!
-test12
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:18:03'!
+test12XWinsIfHeOccupiesEntireSecondRow
 	| game |
 	game _ TicTacToe new.
 	game putXAt: 2 @ 1.
@@ -209,8 +199,8 @@ test12
 	self assert: game hasPlayerXWon.
 	self deny: game hasPlayerOWon.! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:10:37'!
-test13
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:18:15'!
+test13XWinsIfHeOccupiesEntireThirdRow
 	| game |
 	game _ TicTacToe new.
 	game putXAt: 3 @ 1.
@@ -221,8 +211,8 @@ test13
 	self assert: game hasPlayerXWon.
 	self deny: game hasPlayerOWon.! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:10:37'!
-test14
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:18:27'!
+test14XWinsIfHeOccupiesEntireFirstColumn
 	| game |
 	game _ TicTacToe new.
 	game putXAt: 1 @ 1.
@@ -233,8 +223,8 @@ test14
 	self assert: game hasPlayerXWon.
 	self deny: game hasPlayerOWon.! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:10:37'!
-test15
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:19:20'!
+test15XWinsIfHeOccupiesEntireDownwardDiagonal
 	| game |
 	game _ TicTacToe new.
 	game putXAt: 1 @ 1.
@@ -245,8 +235,8 @@ test15
 	self assert: game hasPlayerXWon.
 	self deny: game hasPlayerOWon.! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:10:37'!
-test16
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:20:39'!
+test16XWinsIfHeOccupiesEntireUpwardDiagonal
 	| game |
 	game _ TicTacToe new.
 	game putXAt: 3 @ 1.
@@ -257,8 +247,8 @@ test16
 	self assert: game hasPlayerXWon.
 	self deny: game hasPlayerOWon.! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:10:37'!
-test17
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:21:22'!
+test17OWinsIfHeOccupiesEntireFirstColumn
 	| game |
 	game _ TicTacToe new.
 	game putXAt: 3 @ 1.
@@ -270,58 +260,54 @@ test17
 	self assert: game hasPlayerOWon.
 	self deny: game hasPlayerXWon.! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 13:15:12'!
-test18
-
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:22:25'!
+test18CantPutAnOAfterGameIsOver
 	| game |
-	
-	game := TicTacToe new.
-	
-	game putXAt: 1@1.	
-	game putOAt: 2@1.
-	game putXAt: 1@2.
-	game putOAt: 3@1.	
-	game putXAt: 1@3.
-
-	self 
-		should: [ game putOAt: 3@1 ]
-		raise: Error - MessageNotUnderstood 
+	game _ TicTacToe new.
+	game putXAt: 1 @ 1.
+	game putOAt: 2 @ 1.
+	game putXAt: 1 @ 2.
+	game putOAt: 3 @ 1.
+	game putXAt: 1 @ 3.
+	self
+		should: [ game putOAt: 3 @ 1 ]
+		raise: Error - MessageNotUnderstood
 		withExceptionDo: [ :anError |
-			self assert: TicTacToe canNotPlayWhenGameIsOverErrorMessage equals: anError messageText.
-			self assert: 2 equals: game Os size.
-			self assert: (game Os includes: 2@1).
-			self assert: (game Os includes: 3@1) ]
-			
-			! !
+			self
+				assert: TicTacToe canNotPlayWhenGameIsOverErrorMessage
+				equals: anError messageText.
+			self
+				assert: 2
+				equals: game Os size.
+			self assert: (game Os includes: 2 @ 1).
+			self assert: (game Os includes: 3 @ 1) ].! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 13:22:51'!
-test19
-
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:22:47'!
+test19CantPutAnXAfterGameIsOver
 	| game |
-	
-	game := TicTacToe new.
-	
-	game putXAt: 2@2.
-	game putOAt: 1@1.	
-	game putXAt: 2@1.
-	game putOAt: 1@2.
-	game putXAt: 3@1.	
-	game putOAt: 1@3.
-
-	self 
-		should: [ game putXAt: 3@2 ]
-		raise: Error - MessageNotUnderstood 
+	game _ TicTacToe new.
+	game putXAt: 2 @ 2.
+	game putOAt: 1 @ 1.
+	game putXAt: 2 @ 1.
+	game putOAt: 1 @ 2.
+	game putXAt: 3 @ 1.
+	game putOAt: 1 @ 3.
+	self
+		should: [ game putXAt: 3 @ 2 ]
+		raise: Error - MessageNotUnderstood
 		withExceptionDo: [ :anError |
-			self assert: TicTacToe canNotPlayWhenGameIsOverErrorMessage equals: anError messageText.
-			self assert: 3 equals: game Xs size.
-			self assert: (game Xs includes: 2@2).
-			self assert: (game Xs includes: 2@1).
-			self assert: (game Xs includes: 3@1) ]
-			
-			! !
+			self
+				assert: TicTacToe canNotPlayWhenGameIsOverErrorMessage
+				equals: anError messageText.
+			self
+				assert: 3
+				equals: game Xs size.
+			self assert: (game Xs includes: 2 @ 2).
+			self assert: (game Xs includes: 2 @ 1).
+			self assert: (game Xs includes: 3 @ 1) ].! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:10:37'!
-test20
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:23:09'!
+test20GameEndsInTieAfterNineTurns
 	| game |
 	game _ TicTacToe new.
 	game putXAt: 2 @ 2.
@@ -338,8 +324,8 @@ test20
 	self deny: game hasPlayerOWon.
 	self assert: game isTied.! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:10:37'!
-test21
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/31/2018 16:23:36'!
+test21XCanWinOnFullBoard
 	| game |
 	game _ TicTacToe new.
 	game putXAt: 2 @ 2.
@@ -356,7 +342,7 @@ test21
 	self deny: game hasPlayerOWon.
 	self deny: game isTied.! !
 
-!TicTacToeTest methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:19:33'!
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 5/29/2018 19:19:33'!
 test22PositionsAreRestrictedTo3By3
 	| game |
 	game _ TicTacToe new.
@@ -377,56 +363,82 @@ Object subclass: #TicTacToe
 	poolDictionaries: ''
 	category: 'TicTacToe-Ejercicio'!
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:20:29'!
+!TicTacToe methodsFor: 'accessing' stamp: 'SAS 5/29/2018 19:20:29'!
 Os
 	^os copy.! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:20:38'!
+!TicTacToe methodsFor: 'accessing' stamp: 'SAS 5/29/2018 19:20:38'!
 Xs
 	^xs.! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:24:45'!
+
+!TicTacToe methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 20:31:53'!
+hasPlayerOWon
+	^ state hasPlayerOWon.! !
+
+!TicTacToe methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 20:31:53'!
+hasPlayerXWon
+	^ state hasPlayerXWon.! !
+
+!TicTacToe methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 20:31:53'!
+isOver
+	^ state isOver.! !
+
+!TicTacToe methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 20:31:53'!
+isTied
+	^ state isTied.! !
+
+
+!TicTacToe methodsFor: 'initialization' stamp: 'SAS 5/29/2018 20:33:38'!
+initialize
+	state _ XTurnState for: self.
+	xs _ OrderedCollection new.
+	os _ OrderedCollection new.! !
+
+
+!TicTacToe methodsFor: 'modifying' stamp: 'SAS 5/29/2018 20:31:53'!
+putOAt: aPosition
+	state putOAt: aPosition.! !
+
+!TicTacToe methodsFor: 'modifying' stamp: 'SAS 5/29/2018 20:31:53'!
+putXAt: aPosition
+	state putXAt: aPosition.! !
+
+
+!TicTacToe methodsFor: 'private - board checking' stamp: 'SAS 5/29/2018 19:24:45'!
 checkBoundsFor: aPosition
 	((aPosition x < 4) and: [aPosition y < 4]) ifFalse: [ self error: self class positionOutOfBoundsErrorMessage ]! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:24:39'!
+!TicTacToe methodsFor: 'private - board checking' stamp: 'SAS 5/29/2018 19:24:39'!
 checkNoMarkAt: aPosition
 	((xs includes: aPosition) or: [os includes: aPosition]) ifTrue: [ self error: self class positionTakenErrorMessage ]! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:22:25'!
+!TicTacToe methodsFor: 'private - board checking' stamp: 'SAS 5/29/2018 19:22:25'!
 checkPosition: aPosition
 	self checkBoundsFor: aPosition.
 	self checkNoMarkAt: aPosition.! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/28/2018 20:48:24'!
+!TicTacToe methodsFor: 'private - board checking' stamp: 'SAS 5/28/2018 20:48:24'!
 hasCompletedColumn: positions
 	
 	^ (1 to: 3) anySatisfy: [ :y | (positions count: [ :position | position y = y ]) = 3 ]! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/28/2018 20:48:17'!
+!TicTacToe methodsFor: 'private - board checking' stamp: 'SAS 5/28/2018 20:48:17'!
 hasCompletedRow: positions
 
 	^ (1 to: 3) anySatisfy: [ :x | (positions count: [ :posicion | posicion x = x ]) = 3 ]! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/28/2018 20:47:57'!
+!TicTacToe methodsFor: 'private - board checking' stamp: 'SAS 5/28/2018 20:47:57'!
 hasDownDiagonal: positions
 
 	^(1 to: 3) allSatisfy: [ :n | positions includes: n@n ]! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:31:53'!
-hasPlayerOWon
-	^ state hasPlayerOWon.! !
-
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:31:53'!
-hasPlayerXWon
-	^ state hasPlayerXWon.! !
-
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/28/2018 20:47:41'!
+!TicTacToe methodsFor: 'private - board checking' stamp: 'SAS 5/28/2018 20:47:41'!
 hasUpDiagonal: positions
 
 	^(1 to: 3) allSatisfy: [ :n | positions includes: n@(4-n) ]! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/28/2018 20:47:23'!
+!TicTacToe methodsFor: 'private - board checking' stamp: 'SAS 5/28/2018 20:47:23'!
 hasWin: positions
 
 	^(self hasCompletedRow: positions)
@@ -435,25 +447,8 @@ hasWin: positions
 					or: [(self hasUpDiagonal: positions)]]]
 ! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:33:38'!
-initialize
-	state _ XTurnState for: self.
-	xs _ OrderedCollection new.
-	os _ OrderedCollection new.! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:31:53'!
-isOver
-	^ state isOver.! !
-
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:31:53'!
-isTied
-	^ state isTied.! !
-
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:31:53'!
-putOAt: aPosition
-	state putOAt: aPosition.! !
-
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:33:15'!
+!TicTacToe methodsFor: 'private - state dispatch' stamp: 'SAS 5/29/2018 20:33:15'!
 putODuringOTurnAt: aPosition
 	self checkPosition: aPosition.
 	os add: aPosition.
@@ -461,23 +456,19 @@ putODuringOTurnAt: aPosition
 		ifTrue: [ state _ OWinState for: self ]
 		ifFalse: [ state _ XTurnState for: self ].! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:04:16'!
+!TicTacToe methodsFor: 'private - state dispatch' stamp: 'SAS 5/29/2018 20:04:16'!
 putODuringXTurnAt: aPosition
 	self error: self class notOTurnErrorMessage.! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:58:23'!
+!TicTacToe methodsFor: 'private - state dispatch' stamp: 'SAS 5/29/2018 19:58:23'!
 putOWhileGameIsOverAt: aPosition
 	self error: self class canNotPlayWhenGameIsOverErrorMessage.! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:31:53'!
-putXAt: aPosition
-	state putXAt: aPosition.! !
-
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:04:24'!
+!TicTacToe methodsFor: 'private - state dispatch' stamp: 'SAS 5/29/2018 20:04:24'!
 putXDuringOTurnAt: aPosition
 	self error: self class notXTurnErrorMessage.! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:32:27'!
+!TicTacToe methodsFor: 'private - state dispatch' stamp: 'SAS 5/29/2018 20:32:27'!
 putXDuringXTurnAt: aPosition
 	self checkPosition: aPosition.
 	xs add: aPosition.
@@ -488,7 +479,7 @@ putXDuringXTurnAt: aPosition
 				ifTrue: [ state _ TiedState for: self ]
 				ifFalse: [ state _ OTurnState for: self ]].! !
 
-!TicTacToe methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:58:29'!
+!TicTacToe methodsFor: 'private - state dispatch' stamp: 'SAS 5/29/2018 19:58:29'!
 putXWhileGameIsOverAt: aPosition
 	self error: self class canNotPlayWhenGameIsOverErrorMessage.! !
 
@@ -530,31 +521,33 @@ Object subclass: #TicTacToeState
 	poolDictionaries: ''
 	category: 'TicTacToe-Ejercicio'!
 
-!TicTacToeState methodsFor: 'as yet unclassified' stamp: 'SAS 5/28/2018 20:56:00'!
+!TicTacToeState methodsFor: 'evaluating' stamp: 'SAS 5/28/2018 20:56:00'!
 hasPlayerOWon
 	self subclassResponsibility ! !
 
-!TicTacToeState methodsFor: 'as yet unclassified' stamp: 'SAS 5/28/2018 20:55:58'!
+!TicTacToeState methodsFor: 'evaluating' stamp: 'SAS 5/28/2018 20:55:58'!
 hasPlayerXWon
 	self subclassResponsibility ! !
 
-!TicTacToeState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:34:56'!
-initializeFor: aTicTacToe
-	game := aTicTacToe. ! !
-
-!TicTacToeState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:42:16'!
+!TicTacToeState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:42:16'!
 isOver
 	^self subclassResponsibility! !
 
-!TicTacToeState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:43:27'!
+!TicTacToeState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:43:27'!
 isTied
 	self subclassResponsibility.! !
 
-!TicTacToeState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:16:50'!
+
+!TicTacToeState methodsFor: 'initialization' stamp: 'SAS 5/29/2018 08:34:56'!
+initializeFor: aTicTacToe
+	game := aTicTacToe. ! !
+
+
+!TicTacToeState methodsFor: 'modifying' stamp: 'SAS 5/29/2018 08:16:50'!
 putOAt: aPosition
 	self subclassResponsibility.! !
 
-!TicTacToeState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:16:37'!
+!TicTacToeState methodsFor: 'modifying' stamp: 'SAS 5/29/2018 08:16:37'!
 putXAt: aPosition
 	self subclassResponsibility.! !
 
@@ -576,27 +569,28 @@ TicTacToeState subclass: #OTurnState
 	poolDictionaries: ''
 	category: 'TicTacToe-Ejercicio'!
 
-!OTurnState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:24:41'!
+!OTurnState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:24:41'!
 hasPlayerOWon
 	^false! !
 
-!OTurnState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:24:45'!
+!OTurnState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:24:45'!
 hasPlayerXWon
 	^false! !
 
-!OTurnState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:42:27'!
+!OTurnState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:42:27'!
 isOver
 	^false! !
 
-!OTurnState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:44:41'!
+!OTurnState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:44:41'!
 isTied
 	^false! !
 
-!OTurnState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:00:14'!
+
+!OTurnState methodsFor: 'modifying' stamp: 'SAS 5/29/2018 20:00:14'!
 putOAt: aPosition
 	game putODuringOTurnAt: aPosition.! !
 
-!OTurnState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:04:46'!
+!OTurnState methodsFor: 'modifying' stamp: 'SAS 5/29/2018 20:04:46'!
 putXAt: aPosition
 	game putXDuringOTurnAt: aPosition.! !
 
@@ -608,27 +602,28 @@ TicTacToeState subclass: #OWinState
 	poolDictionaries: ''
 	category: 'TicTacToe-Ejercicio'!
 
-!OWinState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:25:50'!
+!OWinState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:25:50'!
 hasPlayerOWon
 	^true! !
 
-!OWinState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:25:54'!
+!OWinState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:25:54'!
 hasPlayerXWon
 	^false! !
 
-!OWinState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:42:52'!
+!OWinState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:42:52'!
 isOver
 	^true! !
 
-!OWinState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:44:44'!
+!OWinState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:44:44'!
 isTied
 	^false! !
 
-!OWinState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:56:59'!
+
+!OWinState methodsFor: 'modifying' stamp: 'SAS 5/29/2018 19:56:59'!
 putOAt: aPosition
 	game putOWhileGameIsOverAt: aPosition! !
 
-!OWinState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:57:05'!
+!OWinState methodsFor: 'modifying' stamp: 'SAS 5/29/2018 19:57:05'!
 putXAt: aPosition
 	game putXWhileGameIsOverAt: aPosition! !
 
@@ -640,27 +635,28 @@ TicTacToeState subclass: #TiedState
 	poolDictionaries: ''
 	category: 'TicTacToe-Ejercicio'!
 
-!TiedState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:25:37'!
+!TiedState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:25:37'!
 hasPlayerOWon
 	^false! !
 
-!TiedState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:25:41'!
+!TiedState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:25:41'!
 hasPlayerXWon
 	^false! !
 
-!TiedState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:42:43'!
+!TiedState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:42:43'!
 isOver
 	^true! !
 
-!TiedState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:44:49'!
+!TiedState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:44:49'!
 isTied
 	^true! !
 
-!TiedState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:56:51'!
+
+!TiedState methodsFor: 'modifying' stamp: 'SAS 5/29/2018 19:56:51'!
 putOAt: aPosition
 	game putOWhileGameIsOverAt: aPosition! !
 
-!TiedState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:56:43'!
+!TiedState methodsFor: 'modifying' stamp: 'SAS 5/29/2018 19:56:43'!
 putXAt: aPosition
 	game putXWhileGameIsOverAt: aPosition! !
 
@@ -672,27 +668,28 @@ TicTacToeState subclass: #XTurnState
 	poolDictionaries: ''
 	category: 'TicTacToe-Ejercicio'!
 
-!XTurnState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:24:57'!
+!XTurnState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:24:57'!
 hasPlayerOWon
 	^false! !
 
-!XTurnState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:25:00'!
+!XTurnState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:25:00'!
 hasPlayerXWon
 	^false! !
 
-!XTurnState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:42:39'!
+!XTurnState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:42:39'!
 isOver
 	^false! !
 
-!XTurnState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:44:35'!
+!XTurnState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:44:35'!
 isTied
 	^false! !
 
-!XTurnState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:05:04'!
+
+!XTurnState methodsFor: 'modifying' stamp: 'SAS 5/29/2018 20:05:04'!
 putOAt: aPosition
 	game putODuringXTurnAt: aPosition.! !
 
-!XTurnState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:05:28'!
+!XTurnState methodsFor: 'modifying' stamp: 'SAS 5/29/2018 20:05:28'!
 putXAt: aPosition
 	game putXDuringXTurnAt: aPosition.! !
 
@@ -714,26 +711,27 @@ TicTacToeState subclass: #XWinState
 	poolDictionaries: ''
 	category: 'TicTacToe-Ejercicio'!
 
-!XWinState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:26:05'!
+!XWinState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:26:05'!
 hasPlayerOWon
 	^false! !
 
-!XWinState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:26:08'!
+!XWinState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:26:08'!
 hasPlayerXWon
 	^true! !
 
-!XWinState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:42:33'!
+!XWinState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:42:33'!
 isOver
 	^true! !
 
-!XWinState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:51:57'!
+!XWinState methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 08:51:57'!
 isTied
 	^false.! !
 
-!XWinState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:57:22'!
+
+!XWinState methodsFor: 'modifying' stamp: 'SAS 5/29/2018 19:57:22'!
 putOAt: aPosition
 	game putOWhileGameIsOverAt: aPosition! !
 
-!XWinState methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 19:57:20'!
+!XWinState methodsFor: 'modifying' stamp: 'SAS 5/29/2018 19:57:20'!
 putXAt: aPosition
 	game putXWhileGameIsOverAt: aPosition! !
