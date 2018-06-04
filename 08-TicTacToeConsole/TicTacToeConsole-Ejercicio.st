@@ -552,6 +552,76 @@ test25LastPlayReturnsLastMarkedPosition
 	self assert: (game lastPlay) equals: position.! !
 
 
+!classDefinition: #TicTacToeViewTest category: #'TicTacToeConsole-Ejercicio'!
+TestCase subclass: #TicTacToeViewTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TicTacToeConsole-Ejercicio'!
+
+!TicTacToeViewTest methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:04:13'!
+test01OutputContainsAnEmptyTableOnNewGame
+	| game view |
+	game := TicTacToe new.
+	view := TicTacToeView with: game.
+	
+	self assert: (view lines at:1) equals: ' | | '.
+	self assert: (view lines at:2) equals: '-----'.
+	self assert: (view lines at:3) equals: ' | | '.
+	self assert: (view lines at:4) equals: '-----'.
+	self assert: (view lines at:5) equals: ' | | '.
+	self assert: (view lines at:6) equals: 'Playing X'.! !
+
+!TicTacToeViewTest methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:07:40'!
+test02OutputContainsMarksAndStateAfterFirstPlay
+	| game view |
+	game := TicTacToe new.
+	view := TicTacToeView with: game.
+	
+	game putXAt: 1@1.
+	
+	self assert: (view lines at:1) equals: 'X| | '.
+	self assert: (view lines at:2) equals: '-----'.
+	self assert: (view lines at:3) equals: ' | | '.
+	self assert: (view lines at:4) equals: '-----'.
+	self assert: (view lines at:5) equals: ' | | '.
+	self assert: (view lines at:6) equals: 'Playing O'.! !
+
+!TicTacToeViewTest methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:12:00'!
+test03OutputContainsMarksAndStateAfterSecondPlay
+	| game view |
+	game := TicTacToe new.
+	view := TicTacToeView with: game.
+	
+	game putXAt: 1@1.
+	game putOAt: 2@2.
+	
+	self assert: (view lines at:1) equals: 'X| | '.
+	self assert: (view lines at:2) equals: '-----'.
+	self assert: (view lines at:3) equals: ' |O| '.
+	self assert: (view lines at:4) equals: '-----'.
+	self assert: (view lines at:5) equals: ' | | '.
+	self assert: (view lines at:6) equals: 'Playing X'.! !
+
+!TicTacToeViewTest methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:15:11'!
+test04OutputContainsMarksAndStateUntilXVictory
+	| game view |
+	game := TicTacToe new.
+	view := TicTacToeView with: game.
+	
+	game putXAt: 1@1.
+	game putOAt: 2@2.
+	game putXAt: 1@2.
+	game putOAt: 3@2.
+	game putXAt: 1@3.
+	self assert: (view lines at:1) equals: 'X|X|X'.
+	self assert: (view lines at:2) equals: '-----'.
+	self assert: (view lines at:3) equals: ' |O| '.
+	self assert: (view lines at:4) equals: '-----'.
+	self assert: (view lines at:5) equals: ' |O| '.
+	self assert: (view lines at:6) equals: 'X Won!!'.! !
+
+
 !classDefinition: #Observable category: #'TicTacToeConsole-Ejercicio'!
 Object subclass: #Observable
 	instanceVariableNames: 'value observers'
@@ -880,6 +950,76 @@ TicTacToeConsole class
 	instanceVariableNames: ''!
 
 !TicTacToeConsole class methodsFor: 'instance creation' stamp: 'SAS 6/4/2018 13:23:21'!
+with: aTicTacToe 
+	^self new initializeWith: aTicTacToe.! !
+
+
+!classDefinition: #TicTacToeView category: #'TicTacToeConsole-Ejercicio'!
+TicTacToeObserver subclass: #TicTacToeView
+	instanceVariableNames: 'game lines'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TicTacToeConsole-Ejercicio'!
+
+!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 15:56:06'!
+gameStatus
+	^ 'Playing X'! !
+
+!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 15:47:45'!
+gameTableRow: aRowNumber
+	^ ' | | '! !
+
+!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:05:43'!
+initializeWith: aTicTacToe 
+	game := aTicTacToe.
+	game observeState: self.
+	lines := OrderedCollection new.
+	lines add: (self gameTableRow: 1).
+	lines add: (self rowSeparatorLine).
+	lines add: (self gameTableRow: 2).
+	lines add: (self rowSeparatorLine).
+	lines add: (self gameTableRow: 3).
+	lines add: ('Playing X').! !
+
+!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 15:58:47'!
+lines
+	^lines copy.! !
+
+!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:16:51'!
+printGameTable
+	lines at: 1 put: (self gameTableRow: 1).
+	lines at: 2 put: (self rowSeparatorLine).
+	lines at: 3 put: (self gameTableRow: 2).
+	lines at: 4 put: (self rowSeparatorLine).
+	lines at: 5 put: (self gameTableRow: 3).! !
+
+!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 15:44:34'!
+rowSeparatorLine
+	^ '-----'! !
+
+!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 15:59:30'!
+value: aTicTacToeState
+	aTicTacToeState accept: self! !
+
+!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:17:03'!
+visitOTurnState: aXTurnState
+	self lines at:6 put: 'Playing O'.! !
+
+!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:17:07'!
+visitXTurnState: aXTurnState
+	self lines at:6 put: 'Playing X'.! !
+
+!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:16:01'!
+visitXWinState: aXWinState
+	self lines at:6 put: 'Playing X'.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TicTacToeView class' category: #'TicTacToeConsole-Ejercicio'!
+TicTacToeView class
+	instanceVariableNames: ''!
+
+!TicTacToeView class methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:03:47'!
 with: aTicTacToe 
 	^self new initializeWith: aTicTacToe.! !
 
