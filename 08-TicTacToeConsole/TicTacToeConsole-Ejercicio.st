@@ -797,7 +797,7 @@ visitXWinState: anXWinState
 
 !classDefinition: #TicTacToeConsole category: #'TicTacToeConsole-Ejercicio'!
 TicTacToeObserver subclass: #TicTacToeConsole
-	instanceVariableNames: 'game lines xs os'
+	instanceVariableNames: 'game lines'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TicTacToeConsole-Ejercicio'!
@@ -807,12 +807,10 @@ lines
 	^lines copy.! !
 
 
-!TicTacToeConsole methodsFor: 'initialization' stamp: 'SAS 6/4/2018 13:45:13'!
+!TicTacToeConsole methodsFor: 'initialization' stamp: 'SAS 6/4/2018 15:21:47'!
 initializeWith: aTicTacToe 
 	game := aTicTacToe.
 	game observeState: self.
-	xs := game Xs.
-	os := game Os.
 	lines := OrderedCollection new.! !
 
 
