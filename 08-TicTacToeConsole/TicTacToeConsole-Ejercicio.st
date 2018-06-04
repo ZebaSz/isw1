@@ -5,10 +5,6 @@ TestCase subclass: #TicTacToeConsoleTest
 	poolDictionaries: ''
 	category: 'TicTacToeConsole-Ejercicio'!
 
-!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 15:01:34'!
-assertLines: aCollectionOfLines match: expectedLines
-	aCollectionOfLines with: expectedLines do: [ :actual :expected | self assert: actual equals: expected ]! !
-
 !TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 13:19:50'!
 test01OutputIsCleanOnNewGame
 	| game console |
@@ -162,6 +158,11 @@ test06OutputDoesNotChangeIfErrorOccurs
 		withExceptionDo: [ :ex |
 			self assert: (console lines size) equals: 8.
 		]! !
+
+
+!TicTacToeConsoleTest methodsFor: 'test support' stamp: 'SAS 6/4/2018 15:01:34'!
+assertLines: aCollectionOfLines match: expectedLines
+	aCollectionOfLines with: expectedLines do: [ :actual :expected | self assert: actual equals: expected ]! !
 
 
 !classDefinition: #TicTacToeTest category: #'TicTacToeConsole-Ejercicio'!
@@ -559,20 +560,24 @@ TestCase subclass: #TicTacToeViewTest
 	poolDictionaries: ''
 	category: 'TicTacToeConsole-Ejercicio'!
 
-!TicTacToeViewTest methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:04:13'!
+!TicTacToeViewTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 16:45:59'!
 test01OutputContainsAnEmptyTableOnNewGame
 	| game view |
 	game := TicTacToe new.
 	view := TicTacToeView with: game.
 	
-	self assert: (view lines at:1) equals: ' | | '.
-	self assert: (view lines at:2) equals: '-----'.
-	self assert: (view lines at:3) equals: ' | | '.
-	self assert: (view lines at:4) equals: '-----'.
-	self assert: (view lines at:5) equals: ' | | '.
-	self assert: (view lines at:6) equals: 'Playing X'.! !
+	self
+		assertLines: (view lines)
+		match: #(
+			' | | '
+			'-----'
+			' | | '
+			'-----'
+			' | | '
+			'Playing X'
+		).! !
 
-!TicTacToeViewTest methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:07:40'!
+!TicTacToeViewTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 16:46:17'!
 test02OutputContainsMarksAndStateAfterFirstPlay
 	| game view |
 	game := TicTacToe new.
@@ -580,14 +585,18 @@ test02OutputContainsMarksAndStateAfterFirstPlay
 	
 	game putXAt: 1@1.
 	
-	self assert: (view lines at:1) equals: 'X| | '.
-	self assert: (view lines at:2) equals: '-----'.
-	self assert: (view lines at:3) equals: ' | | '.
-	self assert: (view lines at:4) equals: '-----'.
-	self assert: (view lines at:5) equals: ' | | '.
-	self assert: (view lines at:6) equals: 'Playing O'.! !
+	self
+		assertLines: (view lines)
+		match: #(
+			'X| | '
+			'-----'
+			' | | '
+			'-----'
+			' | | '
+			'Playing O'
+		).! !
 
-!TicTacToeViewTest methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:12:00'!
+!TicTacToeViewTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 16:46:37'!
 test03OutputContainsMarksAndStateAfterSecondPlay
 	| game view |
 	game := TicTacToe new.
@@ -596,14 +605,18 @@ test03OutputContainsMarksAndStateAfterSecondPlay
 	game putXAt: 1@1.
 	game putOAt: 2@2.
 	
-	self assert: (view lines at:1) equals: 'X| | '.
-	self assert: (view lines at:2) equals: '-----'.
-	self assert: (view lines at:3) equals: ' |O| '.
-	self assert: (view lines at:4) equals: '-----'.
-	self assert: (view lines at:5) equals: ' | | '.
-	self assert: (view lines at:6) equals: 'Playing X'.! !
+	self
+		assertLines: (view lines)
+		match: #(
+			'X| | '
+			'-----'
+			' |O| '
+			'-----'
+			' | | '
+			'Playing X'
+		).! !
 
-!TicTacToeViewTest methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:15:11'!
+!TicTacToeViewTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 16:47:10'!
 test04OutputContainsMarksAndStateUntilXVictory
 	| game view |
 	game := TicTacToe new.
@@ -614,12 +627,73 @@ test04OutputContainsMarksAndStateUntilXVictory
 	game putXAt: 1@2.
 	game putOAt: 3@2.
 	game putXAt: 1@3.
-	self assert: (view lines at:1) equals: 'X|X|X'.
-	self assert: (view lines at:2) equals: '-----'.
-	self assert: (view lines at:3) equals: ' |O| '.
-	self assert: (view lines at:4) equals: '-----'.
-	self assert: (view lines at:5) equals: ' |O| '.
-	self assert: (view lines at:6) equals: 'X Won!!'.! !
+	
+	self
+		assertLines: (view lines)
+		match: #(
+			'X|X|X'
+			'-----'
+			' |O| '
+			'-----'
+			' |O| '
+			'X Won!!'
+		).! !
+
+!TicTacToeViewTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 16:47:35'!
+test05OutputContainsMarksAndStateUntilOVictory
+	| game view |
+	game := TicTacToe new.
+	view := TicTacToeView with: game.
+	
+	game putXAt: 1@1.
+	game putOAt: 2@2.
+	game putXAt: 1@3.
+	game putOAt: 3@2.
+	game putXAt: 3@1.
+	game putOAt: 1@2.
+	
+	self
+		assertLines: (view lines)
+		match: #(
+			'X|O|X'
+			'-----'
+			' |O| '
+			'-----'
+			'X|O| '
+			'O Won!!'
+		).! !
+
+!TicTacToeViewTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 16:48:16'!
+test06OutputContainsMarksAndStateUntilTie
+	| game view |
+	game := TicTacToe new.
+	view := TicTacToeView with: game.
+	
+	game putXAt: 1@1.
+	game putOAt: 3@3.
+	game putXAt: 1@3.
+	game putOAt: 2@2.
+	game putXAt: 3@1.
+	game putOAt: 1@2.
+	game putXAt: 2@3.
+	game putOAt: 2@1.
+	game putXAt: 3@2.
+	
+	self
+		assertLines: (view lines)
+		match: #(
+			'X|O|X'
+			'-----'
+			'O|O|X'
+			'-----'
+			'X|X|O'
+			'Tie!!'
+		).! !
+
+
+!TicTacToeViewTest methodsFor: 'test support' stamp: 'SAS 6/4/2018 16:44:26'!
+assertLines: aCollectionOfLines match: expectedLines
+	aCollectionOfLines with: expectedLines do: [ :actual :expected | self assert: actual equals: expected ]! !
 
 
 !classDefinition: #Observable category: #'TicTacToeConsole-Ejercicio'!
@@ -629,22 +703,13 @@ Object subclass: #Observable
 	poolDictionaries: ''
 	category: 'TicTacToeConsole-Ejercicio'!
 
-!Observable methodsFor: 'as yet unclassified' stamp: 'SAS 6/4/2018 12:59:57'!
-changeTo: aNewValue
-	value := aNewValue.
-	self notifyObservers.! !
-
-!Observable methodsFor: 'as yet unclassified' stamp: 'SAS 6/4/2018 13:13:58'!
+!Observable methodsFor: 'dispatching' stamp: 'SAS 6/4/2018 13:13:58'!
 doesNotUnderstand: aMessage
 	^aMessage sendTo: value.! !
 
-!Observable methodsFor: 'as yet unclassified' stamp: 'SAS 6/4/2018 13:08:45'!
+!Observable methodsFor: 'dispatching' stamp: 'SAS 6/4/2018 13:08:45'!
 notifyObservers
 	observers do: [ :obs | obs value: value ].! !
-
-!Observable methodsFor: 'as yet unclassified' stamp: 'SAS 6/4/2018 14:26:15'!
-register: anObserver
-	observers add: anObserver.! !
 
 
 !Observable methodsFor: 'initialization' stamp: 'SAS 6/4/2018 13:02:44'!
@@ -652,13 +717,24 @@ initializeWith: aValue
 	value := aValue.
 	observers := OrderedCollection new.! !
 
+
+!Observable methodsFor: 'modifying' stamp: 'SAS 6/4/2018 12:59:57'!
+changeTo: aNewValue
+	value := aNewValue.
+	self notifyObservers.! !
+
+
+!Observable methodsFor: 'observing' stamp: 'SAS 6/4/2018 14:26:15'!
+register: anObserver
+	observers add: anObserver.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Observable class' category: #'TicTacToeConsole-Ejercicio'!
 Observable class
 	instanceVariableNames: ''!
 
-!Observable class methodsFor: 'as yet unclassified' stamp: 'SAS 6/4/2018 13:03:15'!
+!Observable class methodsFor: 'instance creation' stamp: 'SAS 6/4/2018 13:03:15'!
 with: aValue
 	^self new initializeWith: aValue.! !
 
@@ -807,26 +883,26 @@ putXWhileGameIsOverAt: aPosition
 TicTacToe class
 	instanceVariableNames: ''!
 
-!TicTacToe class methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 13:15:31'!
+!TicTacToe class methodsFor: 'messages' stamp: 'jg 5/22/2018 13:15:31'!
 canNotPlayWhenGameIsOverErrorMessage
 	
 	^'Can not play when game is over'! !
 
-!TicTacToe class methodsFor: 'as yet unclassified' stamp: 'SAS 5/28/2018 20:50:57'!
+!TicTacToe class methodsFor: 'messages' stamp: 'SAS 5/28/2018 20:50:57'!
 notOTurnErrorMessage
 
 	^'Not O turn'! !
 
-!TicTacToe class methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 10:26:38'!
+!TicTacToe class methodsFor: 'messages' stamp: 'jg 5/22/2018 10:26:38'!
 notXTurnErrorMessage
 
 	^'Not X turn'! !
 
-!TicTacToe class methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 20:11:58'!
+!TicTacToe class methodsFor: 'messages' stamp: 'SAS 5/29/2018 20:11:58'!
 positionOutOfBoundsErrorMessage
 	^'Position is out of bounds'.! !
 
-!TicTacToe class methodsFor: 'as yet unclassified' stamp: 'jg 5/22/2018 11:20:12'!
+!TicTacToe class methodsFor: 'messages' stamp: 'jg 5/22/2018 11:20:12'!
 positionTakenErrorMessage
 	
 	^'Position taken'! !
@@ -961,57 +1037,70 @@ TicTacToeObserver subclass: #TicTacToeView
 	poolDictionaries: ''
 	category: 'TicTacToeConsole-Ejercicio'!
 
-!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 15:56:06'!
-gameStatus
-	^ 'Playing X'! !
-
-!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 15:47:45'!
-gameTableRow: aRowNumber
-	^ ' | | '! !
-
-!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:05:43'!
-initializeWith: aTicTacToe 
-	game := aTicTacToe.
-	game observeState: self.
-	lines := OrderedCollection new.
-	lines add: (self gameTableRow: 1).
-	lines add: (self rowSeparatorLine).
-	lines add: (self gameTableRow: 2).
-	lines add: (self rowSeparatorLine).
-	lines add: (self gameTableRow: 3).
-	lines add: ('Playing X').! !
-
-!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 15:58:47'!
+!TicTacToeView methodsFor: 'accessing' stamp: 'IT 6/4/2018 15:58:47'!
 lines
 	^lines copy.! !
 
-!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:16:51'!
-printGameTable
-	lines at: 1 put: (self gameTableRow: 1).
-	lines at: 2 put: (self rowSeparatorLine).
-	lines at: 3 put: (self gameTableRow: 2).
-	lines at: 4 put: (self rowSeparatorLine).
-	lines at: 5 put: (self gameTableRow: 3).! !
 
-!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 15:44:34'!
-rowSeparatorLine
-	^ '-----'! !
+!TicTacToeView methodsFor: 'initialization' stamp: 'SAS 6/4/2018 16:56:14'!
+initializeWith: aTicTacToe 
+	game := aTicTacToe.
+	game observeState: self.
+	lines := self class initialBoardLines.! !
 
-!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 15:59:30'!
+
+!TicTacToeView methodsFor: 'observing' stamp: 'IT 6/4/2018 15:59:30'!
 value: aTicTacToeState
 	aTicTacToeState accept: self! !
 
-!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:17:03'!
-visitOTurnState: aXTurnState
-	self lines at:6 put: 'Playing O'.! !
 
-!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:17:07'!
+!TicTacToeView methodsFor: 'visiting' stamp: 'SAS 6/4/2018 16:54:07'!
+visitOTurnState: aOTurnState
+	self registerLastXTurn.
+	self registerGameStatus: 'Playing O'.! !
+
+!TicTacToeView methodsFor: 'visiting' stamp: 'SAS 6/4/2018 16:54:01'!
+visitOWinState: anOWinState 
+	self registerLastOTurn.
+	self registerGameStatus: 'O Won!!'.! !
+
+!TicTacToeView methodsFor: 'visiting' stamp: 'SAS 6/4/2018 16:53:54'!
+visitTiedState: aTiedState 
+	self registerLastXTurn.
+	self registerGameStatus: 'Tie!!'.! !
+
+!TicTacToeView methodsFor: 'visiting' stamp: 'SAS 6/4/2018 16:53:42'!
 visitXTurnState: aXTurnState
-	self lines at:6 put: 'Playing X'.! !
+	self registerLastOTurn.
+	self registerGameStatus: 'Playing X'.! !
 
-!TicTacToeView methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:16:01'!
+!TicTacToeView methodsFor: 'visiting' stamp: 'SAS 6/4/2018 16:52:42'!
 visitXWinState: aXWinState
-	self lines at:6 put: 'Playing X'.! !
+	self registerLastXTurn.
+	self registerGameStatus: 'X Won!!'.! !
+
+
+!TicTacToeView methodsFor: 'private - printing' stamp: 'SAS 6/4/2018 16:53:05'!
+registerGameStatus: aStatus
+	lines at:6 put: aStatus.! !
+
+!TicTacToeView methodsFor: 'private - printing' stamp: 'SAS 6/4/2018 16:36:38'!
+registerLastOTurn
+	self registerLastTurn: $O! !
+
+!TicTacToeView methodsFor: 'private - printing' stamp: 'SAS 6/4/2018 16:57:34'!
+registerLastTurn: aPlayerCharacter
+	| lastPlay row col newLine |
+	lastPlay := game lastPlay.
+	row := (lastPlay x) * 2 - 1.
+	col := (lastPlay y) * 2 - 1.
+	newLine := (lines at: row) copy.
+	newLine at: col put: aPlayerCharacter.
+	lines at: row put: newLine.! !
+
+!TicTacToeView methodsFor: 'private - printing' stamp: 'SAS 6/4/2018 16:36:32'!
+registerLastXTurn
+	self registerLastTurn: $X! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1019,9 +1108,34 @@ visitXWinState: aXWinState
 TicTacToeView class
 	instanceVariableNames: ''!
 
-!TicTacToeView class methodsFor: 'as yet unclassified' stamp: 'IT 6/4/2018 16:03:47'!
+!TicTacToeView class methodsFor: 'instance creation' stamp: 'IT 6/4/2018 16:03:47'!
 with: aTicTacToe 
 	^self new initializeWith: aTicTacToe.! !
+
+
+!TicTacToeView class methodsFor: 'private - initialization' stamp: 'SAS 6/4/2018 16:58:12'!
+dividerRow
+	^'-----'.! !
+
+!TicTacToeView class methodsFor: 'private - initialization' stamp: 'SAS 6/4/2018 16:58:00'!
+emptyRow
+	^' | | '.! !
+
+!TicTacToeView class methodsFor: 'private - initialization' stamp: 'SAS 6/4/2018 16:55:43'!
+initialBoardLines
+	| lines |
+	lines := OrderedCollection new.
+	lines add: self emptyRow.
+	lines add: self dividerRow.
+	lines add: self emptyRow.
+	lines add: self dividerRow.
+	lines add: self emptyRow.
+	lines add: self initialStatus.
+	^lines! !
+
+!TicTacToeView class methodsFor: 'private - initialization' stamp: 'SAS 6/4/2018 16:58:27'!
+initialStatus
+	^'Playing X'.! !
 
 
 !classDefinition: #TicTacToeState category: #'TicTacToeConsole-Ejercicio'!
@@ -1072,7 +1186,7 @@ accept: aStateVisitor
 TicTacToeState class
 	instanceVariableNames: ''!
 
-!TicTacToeState class methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:34:18'!
+!TicTacToeState class methodsFor: 'instance creation' stamp: 'SAS 5/29/2018 08:34:18'!
 for: aTicTacToe
 	^self new initializeFor: aTicTacToe! !
 
@@ -1227,16 +1341,6 @@ putXAt: aPosition
 !XTurnState methodsFor: 'visiting' stamp: 'SAS 6/4/2018 13:47:29'!
 accept: aStateVisitor
 	aStateVisitor visitXTurnState: self.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'XTurnState class' category: #'TicTacToeConsole-Ejercicio'!
-XTurnState class
-	instanceVariableNames: ''!
-
-!XTurnState class methodsFor: 'as yet unclassified' stamp: 'SAS 5/29/2018 08:35:27'!
-for: aTicTacToe
-	^self new initializeFor: aTicTacToe.! !
 
 
 !classDefinition: #XWinState category: #'TicTacToeConsole-Ejercicio'!
