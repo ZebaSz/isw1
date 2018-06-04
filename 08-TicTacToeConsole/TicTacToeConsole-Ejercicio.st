@@ -5,6 +5,10 @@ TestCase subclass: #TicTacToeConsoleTest
 	poolDictionaries: ''
 	category: 'TicTacToeConsole-Ejercicio'!
 
+!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 15:01:34'!
+assertLines: aCollectionOfLines match: expectedLines
+	aCollectionOfLines with: expectedLines do: [ :actual :expected | self assert: actual equals: expected ]! !
+
 !TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 13:19:50'!
 test01OutputIsCleanOnNewGame
 	| game console |
@@ -13,7 +17,7 @@ test01OutputIsCleanOnNewGame
 	
 	self assert: (console lines isEmpty).! !
 
-!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 13:36:49'!
+!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 15:18:38'!
 test02OutputContainsMarksAndStateAfterFirstPlay
 	| game console |
 	game := TicTacToe new.
@@ -21,10 +25,14 @@ test02OutputContainsMarksAndStateAfterFirstPlay
 	
 	game putXAt: 1@1.
 	
-	self assert: (console lines at:1) equals: 'X marcó en 1@1'.
-	self assert: (console lines at:2) equals: 'Estado: Jugando O'.! !
+	self
+		assertLines: (console lines)
+		match: #(
+			'X marcó en 1@1'
+			'Estado: Jugando O'
+		).! !
 
-!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 13:46:57'!
+!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 15:05:47'!
 test03OutputContainsMarksAndStateAfterSecondPlay
 	| game console |
 	game := TicTacToe new.
@@ -33,12 +41,16 @@ test03OutputContainsMarksAndStateAfterSecondPlay
 	game putXAt: 1@1.
 	game putOAt: 2@2.
 	
-	self assert: (console lines at:1) equals: 'X marcó en 1@1'.
-	self assert: (console lines at:2) equals: 'Estado: Jugando O'.
-	self assert: (console lines at:3) equals: 'O marcó en 2@2'.
-	self assert: (console lines at:4) equals: 'Estado: Jugando X'.! !
+	self
+		assertLines: (console lines)
+		match: #(
+			'X marcó en 1@1'
+			'Estado: Jugando O'
+			'O marcó en 2@2'
+			'Estado: Jugando X'
+		).! !
 
-!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 13:54:36'!
+!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 15:05:54'!
 test04OutputContainsMarksAndStateUntilXVictory
 	| game console |
 	game _ TicTacToe new.
@@ -48,38 +60,23 @@ test04OutputContainsMarksAndStateUntilXVictory
 	game putXAt: 1 @ 2.
 	game putOAt: 2 @ 3.
 	game putXAt: 1 @ 3.
+	
 	self
-		assert: (console lines at: 1)
-		equals: 'X marcó en 1@1'.
-	self
-		assert: (console lines at: 2)
-		equals: 'Estado: Jugando O'.
-	self
-		assert: (console lines at: 3)
-		equals: 'O marcó en 2@2'.
-	self
-		assert: (console lines at: 4)
-		equals: 'Estado: Jugando X'.
-	self
-		assert: (console lines at: 5)
-		equals: 'X marcó en 1@2'.
-	self
-		assert: (console lines at: 6)
-		equals: 'Estado: Jugando O'.
-	self
-		assert: (console lines at: 7)
-		equals: 'O marcó en 2@3'.
-	self
-		assert: (console lines at: 8)
-		equals: 'Estado: Jugando X'.
-	self
-		assert: (console lines at: 9)
-		equals: 'X marcó en 1@3'.
-	self
-		assert: (console lines at: 10)
-		equals: 'Estado: Juego Terminado - Ganó X!!'.! !
+		assertLines: (console lines)
+		match: #(
+			'X marcó en 1@1'
+			'Estado: Jugando O'
+			'O marcó en 2@2'
+			'Estado: Jugando X'
+			'X marcó en 1@2'
+			'Estado: Jugando O'
+			'O marcó en 2@3'
+			'Estado: Jugando X'
+			'X marcó en 1@3'
+			'Estado: Juego Terminado - Ganó X!!'
+		).! !
 
-!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 13:55:38'!
+!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 15:07:05'!
 test05OutputContainsMarksAndStateUntilOVictory
 	| game console |
 	game _ TicTacToe new.
@@ -90,44 +87,25 @@ test05OutputContainsMarksAndStateUntilOVictory
 	game putOAt: 2 @ 2.
 	game putXAt: 3 @ 3.
 	game putOAt: 2 @ 3.
+	
 	self
-		assert: (console lines at: 1)
-		equals: 'X marcó en 1@1'.
-	self
-		assert: (console lines at: 2)
-		equals: 'Estado: Jugando O'.
-	self
-		assert: (console lines at: 3)
-		equals: 'O marcó en 2@1'.
-	self
-		assert: (console lines at: 4)
-		equals: 'Estado: Jugando X'.
-	self
-		assert: (console lines at: 5)
-		equals: 'X marcó en 1@2'.
-	self
-		assert: (console lines at: 6)
-		equals: 'Estado: Jugando O'.
-	self
-		assert: (console lines at: 7)
-		equals: 'O marcó en 2@2'.
-	self
-		assert: (console lines at: 8)
-		equals: 'Estado: Jugando X'.
-	self
-		assert: (console lines at: 9)
-		equals: 'X marcó en 3@3'.
-	self
-		assert: (console lines at: 10)
-		equals: 'Estado: Jugando O'.
-	self
-		assert: (console lines at: 11)
-		equals: 'O marcó en 2@3'.
-	self
-		assert: (console lines at: 12)
-		equals: 'Estado: Juego Terminado - Ganó O!!'.! !
+		assertLines: (console lines)
+		match: #(
+			'X marcó en 1@1'
+			'Estado: Jugando O'
+			'O marcó en 2@1'
+			'Estado: Jugando X'
+			'X marcó en 1@2'
+			'Estado: Jugando O'
+			'O marcó en 2@2'
+			'Estado: Jugando X'
+			'X marcó en 3@3'
+			'Estado: Jugando O'
+			'O marcó en 2@3'
+			'Estado: Juego Terminado - Ganó O!!'
+		).! !
 
-!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 14:08:43'!
+!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 15:09:19'!
 test05OutputContainsMarksAndStateUntilTie
 	| game console |
 	game _ TicTacToe new.
@@ -141,62 +119,32 @@ test05OutputContainsMarksAndStateUntilTie
 	game putXAt: 1 @ 2.
 	game putOAt: 3 @ 2.
 	game putXAt: 3 @ 3.
+	
+	
 	self
-		assert: (console lines at: 1)
-		equals: 'X marcó en 2@2'.
-	self
-		assert: (console lines at: 2)
-		equals: 'Estado: Jugando O'.
-	self
-		assert: (console lines at: 3)
-		equals: 'O marcó en 1@1'.
-	self
-		assert: (console lines at: 4)
-		equals: 'Estado: Jugando X'.
-	self
-		assert: (console lines at: 5)
-		equals: 'X marcó en 1@3'.
-	self
-		assert: (console lines at: 6)
-		equals: 'Estado: Jugando O'.
-	self
-		assert: (console lines at: 7)
-		equals: 'O marcó en 3@1'.
-	self
-		assert: (console lines at: 8)
-		equals: 'Estado: Jugando X'.
-	self
-		assert: (console lines at: 9)
-		equals: 'X marcó en 2@1'.
-	self
-		assert: (console lines at: 10)
-		equals: 'Estado: Jugando O'.
-	self
-		assert: (console lines at: 11)
-		equals: 'O marcó en 2@3'.
-	self
-		assert: (console lines at: 12)
-		equals: 'Estado: Jugando X'.
-	self
-		assert: (console lines at: 13)
-		equals: 'X marcó en 1@2'.
-	self
-		assert: (console lines at: 14)
-		equals: 'Estado: Jugando O'.
-	self
-		assert: (console lines at: 15)
-		equals: 'O marcó en 3@2'.
-	self
-		assert: (console lines at: 16)
-		equals: 'Estado: Jugando X'.
-	self
-		assert: (console lines at: 17)
-		equals: 'X marcó en 3@3'.
-	self
-		assert: (console lines at: 18)
-		equals: 'Estado: Juego Terminado - Empate!!'.! !
+		assertLines: (console lines)
+		match: #(
+			'X marcó en 2@2'
+			'Estado: Jugando O'
+			'O marcó en 1@1'
+			'Estado: Jugando X'
+			'X marcó en 1@3'
+			'Estado: Jugando O'
+			'O marcó en 3@1'
+			'Estado: Jugando X'
+			'X marcó en 2@1'
+			'Estado: Jugando O'
+			'O marcó en 2@3'
+			'Estado: Jugando X'
+			'X marcó en 1@2'
+			'Estado: Jugando O'
+			'O marcó en 3@2'
+			'Estado: Jugando X'
+			'X marcó en 3@3'
+			'Estado: Juego Terminado - Empate!!'
+		).! !
 
-!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 14:18:58'!
+!TicTacToeConsoleTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 15:10:01'!
 test06OutputDoesNotChangeIfErrorOccurs
 	| game console |
 	game _ TicTacToe new.
@@ -206,13 +154,13 @@ test06OutputDoesNotChangeIfErrorOccurs
 	game putXAt: 1 @ 3.
 	game putOAt: 3 @ 1.
 	
-	self assert: (console lines size) equals: 4.
+	self assert: (console lines size) equals: 8.
 	
 	self
 		should: [ game putOAt: 1@2 ]
 	 	raise: Error - MessageNotUnderstood
 		withExceptionDo: [ :ex |
-			self assert: (console lines size) equals: 4.
+			self assert: (console lines size) equals: 8.
 		]! !
 
 
@@ -587,6 +535,22 @@ test23CanRegisterToGameStateChanges
 	game putXAt: 1@1.
 	self assert: notified.! !
 
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 15:16:39'!
+test24LastPlayIsNilOnStart
+	| game |
+	game := TicTacToe new.
+	self assert: game lastPlay isNil.! !
+
+!TicTacToeTest methodsFor: 'tests' stamp: 'SAS 6/4/2018 15:17:40'!
+test25LastPlayReturnsLastMarkedPosition
+	| game position |
+	game := TicTacToe new.
+	position := 1@1.
+	
+	game putXAt: position.
+	
+	self assert: (game lastPlay) equals: position.! !
+
 
 !classDefinition: #Observable category: #'TicTacToeConsole-Ejercicio'!
 Object subclass: #Observable
@@ -631,7 +595,7 @@ with: aValue
 
 !classDefinition: #TicTacToe category: #'TicTacToeConsole-Ejercicio'!
 Object subclass: #TicTacToe
-	instanceVariableNames: 'xs os state'
+	instanceVariableNames: 'xs os state lastPlay'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TicTacToeConsole-Ejercicio'!
@@ -643,6 +607,10 @@ Os
 !TicTacToe methodsFor: 'accessing' stamp: 'SAS 6/4/2018 13:46:05'!
 Xs
 	^xs copy.! !
+
+!TicTacToe methodsFor: 'accessing' stamp: 'SAS 6/4/2018 15:12:07'!
+lastPlay
+	^lastPlay.! !
 
 
 !TicTacToe methodsFor: 'evaluating' stamp: 'SAS 5/29/2018 20:31:53'!
@@ -726,10 +694,11 @@ hasWin: positions
 ! !
 
 
-!TicTacToe methodsFor: 'private - state dispatch' stamp: 'SAS 6/4/2018 13:12:49'!
+!TicTacToe methodsFor: 'private - state dispatch' stamp: 'SAS 6/4/2018 15:13:29'!
 putODuringOTurnAt: aPosition
 	self checkPosition: aPosition.
 	os add: aPosition.
+	lastPlay := aPosition.
 	(self hasWin: os)
 		ifTrue: [ state changeTo: (OWinState for: self) ]
 		ifFalse: [ state changeTo: (XTurnState for: self) ].! !
@@ -746,10 +715,11 @@ putOWhileGameIsOverAt: aPosition
 putXDuringOTurnAt: aPosition
 	self error: self class notXTurnErrorMessage.! !
 
-!TicTacToe methodsFor: 'private - state dispatch' stamp: 'SAS 6/4/2018 13:12:00'!
+!TicTacToe methodsFor: 'private - state dispatch' stamp: 'SAS 6/4/2018 15:13:33'!
 putXDuringXTurnAt: aPosition
 	self checkPosition: aPosition.
 	xs add: aPosition.
+	lastPlay := aPosition.
 	(self hasWin: xs)
 		ifTrue: [ state changeTo: (XWinState for: self) ]
 		ifFalse: [
@@ -881,21 +851,17 @@ visitXWinState: aXWinState
 registerEndState: anEndStateMessage
 	self registerNextState: ('Juego Terminado - ', anEndStateMessage).! !
 
-!TicTacToeConsole methodsFor: 'private - printing' stamp: 'SAS 6/4/2018 13:51:43'!
-registerLastOTurn
-	| currOs newO |
-	currOs := game Os.
-	newO := currOs detect: [ :o | (os includes: o) not ].
-	os := currOs.
-	lines add: ('O marcó en ', newO printString).! !
+!TicTacToeConsole methodsFor: 'private - printing' stamp: 'SAS 6/4/2018 15:14:55'!
+registerLastMarkBy: aPlayer
+	lines add: (aPlayer, ' marcó en ', game lastPlay printString).! !
 
-!TicTacToeConsole methodsFor: 'private - printing' stamp: 'SAS 6/4/2018 13:52:33'!
+!TicTacToeConsole methodsFor: 'private - printing' stamp: 'SAS 6/4/2018 15:15:04'!
+registerLastOTurn
+	self registerLastMarkBy: 'O'.! !
+
+!TicTacToeConsole methodsFor: 'private - printing' stamp: 'SAS 6/4/2018 15:15:14'!
 registerLastXTurn
-	| currXs newX |
-	currXs := game Xs.
-	newX := currXs detect: [ :x | (xs includes: x) not ].
-	xs := currXs.
-	lines add: ('X marcó en ', newX printString).! !
+	self registerLastMarkBy: 'X'.! !
 
 !TicTacToeConsole methodsFor: 'private - printing' stamp: 'SAS 6/4/2018 14:01:44'!
 registerNextState: anStateMessage
