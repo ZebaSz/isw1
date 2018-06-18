@@ -8,10 +8,23 @@ TestCase subclass: #BookStoreTest
 !BookStoreTest methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 14:49:47'!
 debit: anAmount from: aCreditCard! !
 
-!BookStoreTest methodsFor: 'as yet unclassified' stamp: 'SAS 6/14/2018 20:46:41'!
+!BookStoreTest methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:05:07'!
+defaultNowBehaviour
+	^[ testObjectsFactory today ].! !
+
+!BookStoreTest methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:11:42'!
+expiredCartNowBehaviour
+	^[ testObjectsFactory today + 31 minutes ].! !
+
+!BookStoreTest methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:08:51'!
+now
+	^nowBehaviour value.! !
+
+!BookStoreTest methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:03:58'!
 setUp 
 
-	testObjectsFactory := StoreTestObjectsFactory new.! !
+	testObjectsFactory := StoreTestObjectsFactory new.
+	nowBehaviour := self defaultNowBehaviour.! !
 
 !BookStoreTest methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 14:37:11'!
 test01cannotCreateCartWithInvalidUser
@@ -253,6 +266,23 @@ test17listPurchasesIncludesPurchasedItems
 	purchases _ bookStore listPurchasesFor: user.
 	
 	self assert: (purchases occurrencesOf: testObjectsFactory itemSellByTheStore) equals: 2.! !
+
+!BookStoreTest methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:12:24'!
+test18cannotAddItemToCartWithExpiredSession
+	| bookStore user cartId |
+	
+	bookStore _ testObjectsFactory createBookStoreThrough: self withTimeFrom: self.
+	user _ testObjectsFactory registeredUser.
+	cartId _ bookStore createCartForUser: user.
+	
+	nowBehaviour _ self expiredCartNowBehaviour.
+	
+	self
+		should: [ bookStore add: 1 of: testObjectsFactory itemSellByTheStore toCartWithId: cartId.]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :ex | 
+			self assert: ex messageText equals: BookStore sessionExpiredMessage
+		]! !
 
 !BookStoreTest methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 14:41:13'!
 today
@@ -509,73 +539,69 @@ debit: anAmount from: aCreditCard
 
 !classDefinition: #BookStore category: #TusLibros!
 Object subclass: #BookStore
-	instanceVariableNames: 'catalogue users processor carts nextId clock owners salesbook'
+	instanceVariableNames: 'catalogue users processor nextId clock owners salesbook sessions'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 13:42:33'!
+!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 16:59:01'!
 add: anAmount of: aProduct toCartWithId: aCartId
 	self assertCartIdIsValid: aCartId.
-	
-	(carts at: aCartId) add: anAmount of: aProduct.! !
+	(sessions at: aCartId) cartDo: [ :cart |
+		cart add: anAmount of: aProduct.
+	]! !
 
-!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/14/2018 21:27:12'!
-assertCartIdIsValid: aCartId 
-	(carts includesKey: aCartId) ifFalse: [ self error: self class invalidCartIdMessage ].! !
+!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 16:53:05'!
+assertCartIdIsValid: aCartId
+	(sessions includesKey: aCartId) ifFalse: [ self error: self class invalidCartIdMessage ].! !
 
 !BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/14/2018 21:02:01'!
 assertUserIsValid: aUser 
 	(users includesKey: aUser key) ifFalse: [ self error: self class invalidUserMessage ].
 	((users at: aUser key) = aUser value) ifFalse: [ self error: self class invalidPasswordMessage ].! !
 
-!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 14:51:30'!
+!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:00:45'!
 checkOut: aCartId debitingFrom: aCreditCard
-	| cashier sale |
+	| cashier session sale |
 	self assertCartIdIsValid: aCartId.
+	session _ sessions at: aCartId.
 	
-	cashier _ Cashier
-		toCheckout: (carts at: aCartId)
-		charging: aCreditCard
-		throught: processor
-		on: self today
-		registeringOn: (self salesbookFor: (owners at: aCartId)).
-		
+	session cartDo: [ :cart |
+		cashier _ Cashier
+			toCheckout: cart
+			charging: aCreditCard
+			throught: processor
+			on: self today
+			registeringOn: (self salesbookFor: session ownerId).
+	].
 	sale _ cashier checkOut.
-	
-	carts removeKey: aCartId.
-	
-	^sale.! !
+	sessions removeKey: aCartId.
+	^ sale.! !
 
-!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 14:43:42'!
+!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 16:58:32'!
 createCartForUser: aUser
 	| cartId |
-
 	self assertUserIsValid: aUser.
-	
 	cartId _ self nextCartId.
-	carts at: cartId put: (Cart acceptingItemsOf: catalogue).
-	owners at: cartId put: aUser key.
-	
-	^cartId! !
+	sessions
+		at: cartId
+		put: (CartSession acceptingItemsOf: catalogue on: self by: aUser key).
+	^ cartId.! !
 
-!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 14:48:41'!
+!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:01:16'!
 initializeWithInventory: aCatalogue withUsers: aUserList through: aMerchantProcessor withTimeFrom: aClock
 	catalogue _ aCatalogue.
 	users _ aUserList.
 	processor _ aMerchantProcessor.
 	clock _ aClock.
-	
-	carts _ Dictionary new.
-	owners _ Dictionary new.
+	sessions _ Dictionary new.
 	salesbook _ Dictionary new.
 	nextId _ 1.! !
 
-!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 13:25:21'!
+!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:09:55'!
 listCart: aCartId
 	self assertCartIdIsValid: aCartId.
-	
-	^(carts at: aCartId) content.! !
+	(sessions at: aCartId) cartDo: [ :cart | ^cart content ].! !
 
 !BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 15:28:56'!
 listPurchasesFor: aUser
@@ -594,9 +620,17 @@ nextCartId
 	nextId _ curId + 1.
 	^curId.! !
 
+!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:02:44'!
+now
+	^clock now.! !
+
 !BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 15:13:38'!
 salesbookFor: aUsername
 	^salesbook at: aUsername ifAbsentPut: [ OrderedCollection new ].! !
+
+!BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:07:13'!
+sessionDuration
+	^30 minutes.! !
 
 !BookStore methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 14:34:15'!
 today
@@ -636,6 +670,10 @@ invalidQuantityErrorMessage
 invalidUserMessage
 	^'That is not a registered user'.! !
 
+!BookStore class methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:12:47'!
+sessionExpiredMessage
+	^CartSession sessionExpiredMessage.! !
+
 !BookStore class methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 14:35:58'!
 withInventory: aCatalogue withUsers: aUserList through: aMerchantProcessor withTimeFrom: aClock
 	^self new initializeWithInventory: aCatalogue withUsers: aUserList through: aMerchantProcessor withTimeFrom: aClock.! !
@@ -647,6 +685,16 @@ Object subclass: #Cart
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
+
+!Cart methodsFor: 'error messages' stamp: 'HernanWilkinson 6/21/2013 23:59'!
+invalidItemErrorMessage
+	
+	^self class invalidItemErrorMessage ! !
+
+!Cart methodsFor: 'error messages' stamp: 'HernanWilkinson 6/22/2013 00:00'!
+invalidQuantityErrorMessage
+	
+	^self class invalidQuantityErrorMessage ! !
 
 
 !Cart methodsFor: 'assertions' stamp: 'SAS 6/18/2018 13:47:53'!
@@ -660,6 +708,17 @@ assertIsValidQuantity: aQuantity
 	aQuantity strictlyPositive ifFalse: [ self error: self class invalidQuantityErrorMessage ]! !
 
 
+!Cart methodsFor: 'content' stamp: 'HernanWilkinson 6/22/2013 12:17'!
+catalog
+	
+	^ catalog! !
+
+!Cart methodsFor: 'content' stamp: 'HernanWilkinson 6/23/2013 12:10'!
+itemsAndQuantitiesDo: aBlock
+	
+	^ items contents keysAndValuesDo: [ :anItem :aQuantity | aBlock value: anItem value: aQuantity ]! !
+
+
 !Cart methodsFor: 'initialization' stamp: 'HernanWilkinson 6/17/2013 17:48'!
 initializeAcceptingItemsOf: aCatalog
 
@@ -667,10 +726,15 @@ initializeAcceptingItemsOf: aCatalog
 	items := OrderedCollection new.! !
 
 
-!Cart methodsFor: 'queries' stamp: 'HernanWilkinson 6/17/2013 17:45'!
-occurrencesOf: anItem
+!Cart methodsFor: 'error signal' stamp: 'HernanWilkinson 6/22/2013 14:18'!
+signalInvalidItem 
 
-	^items occurrencesOf: anItem  ! !
+	self error: self invalidItemErrorMessage! !
+
+!Cart methodsFor: 'error signal' stamp: 'HernanWilkinson 6/22/2013 14:19'!
+signalInvalidQuantity 
+
+	self error: self invalidQuantityErrorMessage ! !
 
 
 !Cart methodsFor: 'testing' stamp: 'HernanWilkinson 6/17/2013 17:44'!
@@ -682,12 +746,6 @@ includes: anItem
 isEmpty
 	
 	^items isEmpty ! !
-
-
-!Cart methodsFor: 'total' stamp: 'HernanWilkinson 6/17/2013 19:09'!
-total
-
-	^ items sum: [ :anItem | catalog at: anItem ]! !
 
 
 !Cart methodsFor: 'adding' stamp: 'HernanWilkinson 6/17/2013 17:44'!
@@ -704,6 +762,18 @@ add: aQuantity of: anItem
 	1 to: aQuantity do: [ :aNumber | items add: anItem ]! !
 
 
+!Cart methodsFor: 'queries' stamp: 'HernanWilkinson 6/17/2013 17:45'!
+occurrencesOf: anItem
+
+	^items occurrencesOf: anItem  ! !
+
+
+!Cart methodsFor: 'total' stamp: 'HernanWilkinson 6/17/2013 19:09'!
+total
+
+	^ items sum: [ :anItem | catalog at: anItem ]! !
+
+
 !Cart methodsFor: 'accessing' stamp: 'SAS 6/18/2018 13:25:54'!
 content
 	^items copy.! !
@@ -713,6 +783,7 @@ content
 !classDefinition: 'Cart class' category: #TusLibros!
 Cart class
 	instanceVariableNames: ''!
+
 
 !Cart class methodsFor: 'instance creation' stamp: 'HernanWilkinson 6/17/2013 17:48'!
 acceptingItemsOf: aCatalog
@@ -730,6 +801,58 @@ invalidQuantityErrorMessage
 	^'Invalid number of items'! !
 
 
+!classDefinition: #CartSession category: #TusLibros!
+Object subclass: #CartSession
+	instanceVariableNames: 'cart lastOperationTime bookStore ownerId'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!CartSession methodsFor: 'initialization' stamp: 'SAS 6/18/2018 16:57:30'!
+initializeAcceptingItemsOf: aCollectionOfItems on: aBookStore by: aUserId
+	cart := Cart acceptingItemsOf: aCollectionOfItems.
+	ownerId := aUserId.
+	bookStore := aBookStore.
+	lastOperationTime := aBookStore now.! !
+
+
+!CartSession methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 16:49:00'!
+assertIsNotExpired
+	self isExpired ifTrue: [ self error: self class sessionExpiredMessage ].! !
+
+!CartSession methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:10:41'!
+cartDo: aBlock
+	self assertIsNotExpired.
+	lastOperationTime := bookStore now.
+	^aBlock value: cart.
+	! !
+
+!CartSession methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 16:18:22'!
+isExpired
+	
+	^ (lastOperationTime + bookStore sessionDuration) < bookStore now.
+	
+	! !
+
+!CartSession methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:01:00'!
+ownerId
+	^ownerId.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CartSession class' category: #TusLibros!
+CartSession class
+	instanceVariableNames: ''!
+
+!CartSession class methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 16:57:59'!
+acceptingItemsOf: aCollectionOfItems on: aBookStore by: aUserId
+	^self new initializeAcceptingItemsOf: aCollectionOfItems on: aBookStore by: aUserId.! !
+
+!CartSession class methodsFor: 'as yet unclassified' stamp: 'SAS 6/18/2018 17:12:07'!
+sessionExpiredMessage
+	^'The requested session has expired.'! !
+
+
 !classDefinition: #Cashier category: #TusLibros!
 Object subclass: #Cashier
 	instanceVariableNames: 'cart salesBook merchantProcessor creditCard total sale'
@@ -743,11 +866,28 @@ calculateTotal
 	total := cart total.
 	! !
 
+!Cashier methodsFor: 'checkout - private' stamp: 'HernanWilkinson 6/22/2013 12:17'!
+createLineItemOf: anItem quantity: aQuantity 
+
+	^LineItem of: anItem quantity: aQuantity total: (self totalOf: anItem quantity: aQuantity) ! !
+
 !Cashier methodsFor: 'checkout - private' stamp: 'SAS 6/18/2018 15:21:16'!
 createSale
 
 	^ Sale forItems: cart content totaling: total
 ! !
+
+!Cashier methodsFor: 'checkout - private' stamp: 'HernanWilkinson 6/22/2013 12:28'!
+createTicket
+
+	| lineItems |
+	
+	lineItems := OrderedCollection new.
+	cart itemsAndQuantitiesDo: [ :anItem :aQuantity | 
+		lineItems add: (self createLineItemOf: anItem quantity: aQuantity)].
+	
+	ticket := Ticket of: lineItems 
+	! !
 
 !Cashier methodsFor: 'checkout - private' stamp: 'HernanWilkinson 6/17/2013 19:06'!
 debitTotal
@@ -760,6 +900,11 @@ registerSale
 
 	sale _ self createSale.
 	salesBook add: sale! !
+
+!Cashier methodsFor: 'checkout - private' stamp: 'HernanWilkinson 6/22/2013 12:17'!
+totalOf: anItem quantity: aQuantity 
+
+	^(cart catalog at: anItem) * aQuantity  ! !
 
 
 !Cashier methodsFor: 'checkout' stamp: 'SAS 6/18/2018 14:53:51'!
@@ -776,6 +921,15 @@ checkOut
 initializeToCheckout: aCart charging: aCreditCard throught: aMerchantProcessor registeringOn: aSalesBook
 	
 	cart := aCart.
+	creditCard := aCreditCard.
+	merchantProcessor := aMerchantProcessor.
+	salesBook := aSalesBook! !
+
+!Cashier methodsFor: 'initialization' stamp: 'HernanWilkinson 6/22/2013 12:02'!
+initializeToCheckout: aCart ownedBy: anOwner charging: aCreditCard throught: aMerchantProcessor registeringOn: aSalesBook
+	
+	cart := aCart.
+	owner := anOwner.
 	creditCard := aCreditCard.
 	merchantProcessor := aMerchantProcessor.
 	salesBook := aSalesBook! !
@@ -805,6 +959,14 @@ toCheckout: aCart charging: aCreditCard throught: aMerchantProcessor on: aDate r
 	
 	^self new initializeToCheckout: aCart charging: aCreditCard throught: aMerchantProcessor registeringOn: aSalesBook! !
 
+!Cashier class methodsFor: 'instance creation' stamp: 'HernanWilkinson 6/22/2013 12:00'!
+toCheckout: aCart ownedBy: anOwner charging: aCreditCard throught: aMerchantProcessor on: aDate registeringOn: aSalesBook
+	
+	self assertIsNotEmpty: aCart.
+	self assertIsNotExpired: aCreditCard on: aDate.
+	
+	^self new initializeToCheckout: aCart ownedBy: anOwner charging: aCreditCard throught: aMerchantProcessor registeringOn: aSalesBook! !
+
 
 !Cashier class methodsFor: 'error messages' stamp: 'HernanWilkinson 6/17/2013 18:21'!
 canNotChargeAnExpiredCreditCardErrorMessage
@@ -820,6 +982,17 @@ cartCanNotBeEmptyErrorMessage
 creditCardHasNoCreditErrorMessage
 	
 	^'Credit card has no credit'! !
+
+
+!Cashier class methodsFor: 'error signal' stamp: 'HernanWilkinson 6/22/2013 14:22'!
+signalCanNotChargeAnExpiredCreditCard
+
+	 self error: self canNotChargeAnExpiredCreditCardErrorMessage ! !
+
+!Cashier class methodsFor: 'error signal' stamp: 'HernanWilkinson 6/22/2013 14:22'!
+signalCartCanNotBeEmpty
+
+	self error: self cartCanNotBeEmptyErrorMessage! !
 
 
 !classDefinition: #CreditCard category: #TusLibros!
@@ -852,6 +1025,11 @@ initializeWithNumber: aCreditCardNumber ownedBy: anOwner expiringOn: aMonth
 CreditCard class
 	instanceVariableNames: ''!
 
+!CreditCard class methodsFor: 'instance creation' stamp: 'HernanWilkinson 6/17/2013 18:38'!
+expiringOn: aMonth 
+	
+	^self new initializeExpiringOn: aMonth! !
+
 !CreditCard class methodsFor: 'instance creation' stamp: 'SAS 6/18/2018 14:57:53'!
 withNumber: aCreditCardNumber ownedBy: anOwner expiringOn: aMonth	
 	^self new initializeWithNumber: aCreditCardNumber ownedBy: anOwner expiringOn: aMonth! !
@@ -864,11 +1042,17 @@ Object subclass: #Sale
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Sale methodsFor: 'total' stamp: 'HernanWilkinson 6/17/2013 18:48'!
-total
-	
-	^ total! !
+!Sale methodsFor: 'testing' stamp: 'HernanWilkinson 6/22/2013 12:06'!
+wasDoneBy: aCustomer
 
+	^customer = aCustomer ! !
+
+
+!Sale methodsFor: 'initialization' stamp: 'HernanWilkinson 6/22/2013 12:26'!
+initializeDoneBy: aCustomer certifiedWith: aTicket 
+
+	customer := aCustomer.
+	ticket := aTicket ! !
 
 !Sale methodsFor: 'initialization' stamp: 'SAS 6/18/2018 15:19:30'!
 initializeForItems: aCollectionOfItems totaling: aTotal
@@ -882,6 +1066,18 @@ initializeTotal: aTotal
 	total := aTotal ! !
 
 
+!Sale methodsFor: 'total' stamp: 'HernanWilkinson 6/17/2013 18:48'!
+total
+	
+	^ total! !
+
+
+!Sale methodsFor: 'line items' stamp: 'HernanWilkinson 6/22/2013 12:33'!
+lineItemsDo: aBlock
+	
+	^ticket lineItemsDo: aBlock ! !
+
+
 !Sale methodsFor: 'accessing' stamp: 'SAS 6/18/2018 15:29:27'!
 items
 	^items copy! !
@@ -891,6 +1087,11 @@ items
 !classDefinition: 'Sale class' category: #TusLibros!
 Sale class
 	instanceVariableNames: ''!
+
+!Sale class methodsFor: 'instance creation' stamp: 'HernanWilkinson 6/22/2013 12:25'!
+doneBy: aCustomer certifiedWith: aTicket 
+
+	^self new initializeDoneBy: aCustomer certifiedWith: aTicket ! !
 
 !Sale class methodsFor: 'instance creation' stamp: 'SAS 6/18/2018 15:20:31'!
 forItems: aCollectionOfItems totaling: aTotal
@@ -962,6 +1163,11 @@ expiredCreditCard
 		ownedBy: self creditCardOwner
 		expiringOn: (Month month: today monthIndex year: today yearNumber - 1)! !
 
+!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'HernanWilkinson 6/22/2013 11:24'!
+expiredMonthOfYear 
+
+	^ Month month: today monthIndex year: today yearNumber - 1! !
+
 !StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'SAS 6/18/2018 14:59:04'!
 notExpiredCreditCard
 	
@@ -969,6 +1175,11 @@ notExpiredCreditCard
 		withNumber: self creditCardNumber
 		ownedBy: self creditCardOwner
 		expiringOn: (Month month: today monthIndex year: today yearNumber + 1)! !
+
+!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'HernanWilkinson 6/22/2013 11:06'!
+notExpiredMonthOfYear
+
+	^ Month month: today monthIndex year: today yearNumber + 1! !
 
 
 !StoreTestObjectsFactory methodsFor: 'initialization' stamp: 'HernanWilkinson 6/17/2013 18:37'!
@@ -981,6 +1192,12 @@ initialize
 today
 	
 	^ today! !
+
+
+!StoreTestObjectsFactory methodsFor: 'customer' stamp: 'HernanWilkinson 6/22/2013 12:02'!
+customer
+	
+	^'aCustomer'! !
 
 
 !StoreTestObjectsFactory methodsFor: 'book store' stamp: 'SAS 6/18/2018 14:36:48'!
